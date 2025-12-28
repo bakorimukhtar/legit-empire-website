@@ -1,0 +1,386 @@
+.schedule-page {
+    padding: 44px 6vw 80px;
+    min-height: 100vh;
+    background: radial-gradient(circle at top left, #fff3e0 0, #fff8f0 45%);
+  }
+  
+  /* HERO */
+  
+  .schedule-hero {
+    display: grid;
+    grid-template-columns: minmax(0, 1.6fr) minmax(0, 1.1fr);
+    gap: 40px;
+    align-items: center;
+    margin-bottom: 56px;
+  }
+  
+  .schedule-pill {
+    display: inline-flex;
+    padding: 6px 14px;
+    border-radius: 999px;
+    background: rgba(139, 69, 19, 0.08);
+    color: var(--brand-brown);
+    font-size: 11px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.12em;
+    margin-bottom: 10px;
+  }
+  
+  .schedule-hero-text h1 {
+    font-size: clamp(30px, 4vw, 40px);
+    color: var(--brand-brown-dark);
+    margin-bottom: 12px;
+  }
+  
+  .schedule-hero-text p {
+    font-size: 15px;
+    line-height: 1.8;
+    color: var(--text-muted);
+    max-width: 560px;
+  }
+  
+  .schedule-meta-row {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 18px;
+    margin-top: 20px;
+  }
+  
+  .meta-label {
+    display: block;
+    font-size: 11px;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    color: var(--text-muted);
+  }
+  
+  .meta-value {
+    display: block;
+    font-size: 13px;
+    font-weight: 500;
+    color: var(--brand-brown-dark);
+  }
+  
+  /* HERO CARD */
+  
+  .schedule-hero-card {
+    border-radius: 22px;
+    padding: 18px 18px 20px;
+    background: linear-gradient(145deg, #4a2610, #1c0f07);
+    color: #f9fafb;
+    box-shadow: 0 26px 60px rgba(0, 0, 0, 0.65);
+  }
+  
+  .hero-card-header {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    text-transform: uppercase;
+    letter-spacing: 0.12em;
+    font-size: 11px;
+    font-weight: 600;
+    margin-bottom: 12px;
+  }
+  
+  .hero-checklist {
+    list-style: none;
+    padding: 0;
+    margin: 0 0 12px;
+    display: grid;
+    gap: 8px;
+  }
+  
+  .hero-checklist li {
+    display: flex;
+    gap: 8px;
+    font-size: 13px;
+    color: rgba(226, 232, 240, 0.95);
+  }
+  
+  .hero-footnote {
+    font-size: 12px;
+    color: rgba(248, 250, 252, 0.8);
+  }
+  
+  /* BODY */
+  
+  .schedule-body {
+    background: rgba(255, 255, 255, 0.9);
+    border-radius: 24px;
+    box-shadow: 0 20px 50px rgba(15, 23, 42, 0.18);
+    padding: 24px;
+  }
+  
+  .schedule-layout {
+    display: grid;
+    grid-template-columns: minmax(0, 1.85fr) minmax(0, 1.1fr);
+    gap: 30px;
+  }
+  
+  /* FORM */
+  
+  .schedule-form {
+    background: #ffffff;
+    border-radius: 18px;
+    padding: 22px 22px 24px;
+    border: 1px solid rgba(148, 163, 184, 0.5);
+  }
+  
+  .form-row-2 {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 16px;
+  }
+  
+  .form-row-3 {
+    display: grid;
+    grid-template-columns: minmax(0, 1.1fr) minmax(0, 1.1fr) minmax(0, 0.9fr);
+    gap: 16px;
+  }
+  
+  .form-group {
+    margin-bottom: 18px;
+  }
+  
+  .form-group label {
+    display: block;
+    font-size: 13px;
+    font-weight: 600;
+    color: #334155;
+    margin-bottom: 6px;
+  }
+  
+  .form-group input,
+  .form-group select,
+  .form-group textarea {
+    width: 100%;
+    border-radius: 12px;
+    border: 1px solid #e2e8f0;
+    background: #f8fafc;
+    font-size: 14px;
+    padding: 11px 14px;
+    font-family: "Poppins", system-ui, sans-serif;
+    color: #111827;
+    transition: border-color 0.2s ease, box-shadow 0.2s ease, background 0.2s ease;
+  }
+  
+  .form-group textarea {
+    resize: vertical;
+    min-height: 110px;
+  }
+  
+  .form-group input:focus,
+  .form-group select:focus,
+  .form-group textarea:focus {
+    outline: none;
+    border-color: var(--brand-brown);
+    background: #ffffff;
+    box-shadow: 0 0 0 3px rgba(139, 69, 19, 0.12);
+  }
+  
+  .schedule-submit-btn {
+    width: 100%;
+    margin-top: 6px;
+    padding: 12px 18px;
+    border-radius: 12px;
+    border: none;
+    font-size: 14px;
+    font-weight: 600;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    cursor: pointer;
+    color: #ffffff;
+    background: linear-gradient(
+      135deg,
+      var(--brand-brown),
+      var(--brand-brown-dark)
+    );
+    box-shadow: 0 12px 26px rgba(139, 69, 19, 0.3);
+    transition: transform 0.15s ease, box-shadow 0.15s ease, opacity 0.15s ease;
+  }
+  
+  .schedule-submit-btn:hover:not(:disabled) {
+    transform: translateY(-1px);
+    box-shadow: 0 16px 34px rgba(139, 69, 19, 0.4);
+  }
+  
+  .schedule-submit-btn:disabled {
+    opacity: 0.7;
+    cursor: default;
+    box-shadow: none;
+    transform: none;
+  }
+  
+  .schedule-disclaimer {
+    margin-top: 8px;
+    font-size: 11px;
+    color: #94a3b8;
+  }
+  
+  /* SIDE INFO */
+  
+  .schedule-side {
+    border-radius: 18px;
+    padding: 22px 20px 22px;
+    background: #fff7ec;
+    border: 1px solid rgba(148, 163, 184, 0.5);
+  }
+  
+  .schedule-side h3 {
+    font-size: 18px;
+    margin-bottom: 6px;
+    color: var(--brand-brown-dark);
+  }
+  
+  .schedule-side p {
+    font-size: 13px;
+    color: var(--text-muted);
+    margin-bottom: 16px;
+  }
+  
+  .side-list {
+    list-style: none;
+    padding: 0;
+    margin: 0 0 16px;
+    display: grid;
+    gap: 10px;
+  }
+  
+  .side-list li {
+    display: grid;
+    grid-template-columns: 10px minmax(0, 1fr);
+    gap: 10px;
+  }
+  
+  .side-dot {
+    width: 8px;
+    height: 8px;
+    border-radius: 999px;
+    background: var(--brand-brown);
+    margin-top: 6px;
+  }
+  
+  .side-list strong {
+    font-size: 13px;
+    color: #111827;
+  }
+  
+  .side-list p {
+    font-size: 12px;
+    color: #6b7280;
+    margin: 2px 0 0;
+  }
+  
+  .side-footer {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-size: 12px;
+    color: #6b7280;
+  }
+  
+  .side-footer a {
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    font-size: 12px;
+    font-weight: 600;
+    color: var(--brand-brown-dark);
+    text-decoration: none;
+  }
+  
+  /* CONFIRMATION */
+  
+  .schedule-confirm-overlay {
+    position: fixed;
+    inset: 0;
+    background: rgba(15, 23, 42, 0.6);
+    backdrop-filter: blur(6px);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 2000;
+    padding: 20px;
+  }
+  
+  .schedule-confirm-card {
+    background: #ffffff;
+    padding: 28px 24px 24px;
+    border-radius: 22px;
+    max-width: 420px;
+    width: 100%;
+    text-align: center;
+    box-shadow: 0 26px 60px rgba(15, 23, 42, 0.45);
+  }
+  
+  .confirm-icon {
+    width: 70px;
+    height: 70px;
+    border-radius: 999px;
+    background: #fff7ec;
+    color: var(--brand-brown-dark);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 0 auto 14px;
+  }
+  
+  .schedule-confirm-card h2 {
+    font-size: 22px;
+    margin-bottom: 8px;
+    color: #021024;
+  }
+  
+  .schedule-confirm-card p {
+    font-size: 14px;
+    color: #64748b;
+    line-height: 1.7;
+    margin-bottom: 20px;
+  }
+  
+  .confirm-btn {
+    width: 100%;
+    border-radius: 12px;
+    border: none;
+    padding: 11px 18px;
+    background: #021024;
+    color: #ffffff;
+    font-size: 14px;
+    font-weight: 600;
+    cursor: pointer;
+  }
+  
+  /* RESPONSIVE */
+  
+  @media (max-width: 960px) {
+    .schedule-hero {
+      grid-template-columns: 1fr;
+    }
+  
+    .schedule-hero-card {
+      order: -1;
+    }
+  
+    .schedule-layout {
+      grid-template-columns: 1fr;
+    }
+  }
+  
+  @media (max-width: 640px) {
+    .schedule-page {
+      padding-inline: 5vw;
+    }
+  
+    .form-row-2,
+    .form-row-3 {
+      grid-template-columns: 1fr;
+    }
+  
+    .side-footer {
+      flex-direction: column;
+      align-items: flex-start;
+      gap: 6px;
+    }
+  }
+  
