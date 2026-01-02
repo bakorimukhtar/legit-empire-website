@@ -1,76 +1,179 @@
-import React, { useEffect } from "react";
-import "./ComingSoon.css";
-import { motion } from "framer-motion";
-import { Hammer, ArrowLeft, Rocket } from "lucide-react";
-import { Link } from "react-router-dom";
+import React, { useState } from "react";
+import "./Projects.css";
 
-const ComingSoon = () => {
-  useEffect(() => {
-    document.title = "Coming Soon | Legit Empire";
-  }, []);
+// IMPORT LOCAL IMAGES FOR APO ABUJA
+import FrontSidedView from "../projects/APO ABUJA/front sided view.JPG";
+import FrontView from "../projects/APO ABUJA/FRONT VIEW.JPG";
+import LeftView from "../projects/APO ABUJA/LEFT VIEW.JPG";
+import SideView from "../projects/APO ABUJA/SIDE VIEW.JPG";
+import Swimming from "../projects/APO ABUJA/Swimming.JPG";
+import SiteLayout from "../projects/APO ABUJA/Site layout.jpeg";
+
+const projects = [
+  {
+    id: 1,
+    name: "Apo Abuja Estate",
+    location: "Apo, Abuja",
+    status: "Ongoing",
+    type: "Residential Estate",
+    coverImage: FrontView,
+    units: "Fully detached, semi-detached & terraces",
+    size: "Site development layout",
+    description:
+      "Premium gated residential community in Apo Abuja with fully detached, semi-detached and terrace units, mosque, recreational area and ample green spaces.",
+    layouts: [
+      { id: "layout", label: "Site development layout", image: SiteLayout },
+      { id: "front", label: "Front view", image: FrontView },
+      { id: "frontSide", label: "Front sided view", image: FrontSidedView },
+      { id: "left", label: "Left view", image: LeftView },
+      { id: "side", label: "Side view", image: SideView },
+      { id: "pool", label: "Swimming / recreational", image: Swimming },
+    ],
+  },
+];
+
+const filterOptions = ["All", "Ongoing", "Completed", "Residential", "Commercial"];
+
+const Projects = () => {
+  const [activeFilter, setActiveFilter] = useState("All");
+  const [activeProjectId, setActiveProjectId] = useState(projects[0]?.id || null);
+  const [activeImageIndex, setActiveImageIndex] = useState(0);
+
+  const filteredProjects =
+    activeFilter === "All"
+      ? projects
+      : projects.filter((p) => {
+          if (activeFilter === "Ongoing" || activeFilter === "Completed") {
+            return p.status === activeFilter;
+          }
+          return p.type.toLowerCase().includes(activeFilter.toLowerCase());
+        });
+
+  const activeProject =
+    filteredProjects.find((p) => p.id === activeProjectId) ||
+    filteredProjects[0] ||
+    null;
+
+  const activeImage =
+    activeProject && activeProject.layouts[activeImageIndex]
+      ? activeProject.layouts[activeImageIndex]
+      : null;
 
   return (
-    <motion.div
-      className="coming-soon-page"
-      initial={{ opacity: 0 }}
-      animate={{ opacity: 1 }}
-      exit={{ opacity: 0 }}
-    >
-      <section className="coming-soon-wrapper">
-        <motion.div
-          className="coming-soon-card"
-          initial={{ y: 30, opacity: 0, scale: 0.96 }}
-          whileInView={{ y: 0, opacity: 1, scale: 1 }}
-          viewport={{ margin: "-80px" }} // replays on scroll
-          transition={{ duration: 0.6, ease: "easeOut" }}
-        >
-          <div className="coming-icon-shell">
-            <motion.div
-              className="coming-main-icon"
-              animate={{ rotate: [0, -8, 8, -8, 0] }}
-              transition={{ repeat: Infinity, duration: 2.4, ease: "easeInOut" }}
-            >
-              <Hammer size={42} />
-            </motion.div>
-
-            <motion.div
-              className="coming-accent-icon"
-              initial={{ x: 12, y: -18, opacity: 0, scale: 0.8 }}
-              animate={{ x: 0, y: 0, opacity: 1, scale: 1 }}
-              transition={{ delay: 0.5, duration: 0.5, ease: "easeOut" }}
-            >
-              <Rocket size={28} />
-            </motion.div>
-          </div>
-
-          <h1>Something new is coming.</h1>
-          <p>
-            This part of the Legit Empire experience is still being crafted.
-            The page will go live soon with new features and project updates.
+    <div className="le-projects-page">
+      {/* HERO */}
+      <header className="le-projects-hero">
+        <div>
+          <p className="le-badge">Projects</p>
+          <h1>Apo Abuja estate development</h1>
+          <p className="le-projects-sub">
+            View the full site development layout and 3D perspectives for Legit
+            Empire’s flagship Apo Abuja residential estate.
           </p>
+        </div>
+        <div className="le-projects-hero-meta">
+          <div>
+            <span className="le-meta-label">Current Project</span>
+            <span className="le-meta-value">Apo Abuja</span>
+          </div>
+          <div>
+            <span className="le-meta-label">Project Status</span>
+            <span className="le-meta-value">{projects[0].status}</span>
+          </div>
+        </div>
+      </header>
 
-          <div className="coming-tag-row">
-            <span className="coming-tag">Secure by design</span>
-            <span className="coming-tag">Real estate, done right</span>
+      {/* FILTERS */}
+      <section className="le-projects-filters">
+        {filterOptions.map((opt) => (
+          <button
+            key={opt}
+            className={
+              "le-filter-chip" +
+              (activeFilter === opt ? " le-filter-chip-active" : "")
+            }
+            onClick={() => setActiveFilter(opt)}
+          >
+            {opt}
+          </button>
+        ))}
+      </section>
+
+      {/* MAIN LAYOUT: GALLERY + INFO */}
+      {activeProject && (
+        <section className="le-projects-layout">
+          {/* LEFT: MAIN IMAGE + THUMBNAILS */}
+          <div className="le-projects-gallery">
+            {activeImage && (
+              <div className="le-projects-main-image">
+                <img
+                  src={activeImage.image}
+                  alt={activeImage.label}
+                  className="le-projects-main-img"
+                />
+                <div className="le-projects-main-caption">
+                  <span>{activeImage.label}</span>
+                </div>
+              </div>
+            )}
+
+            <div className="le-projects-thumbs">
+              {activeProject.layouts.map((layout, index) => (
+                <button
+                  key={layout.id}
+                  className={
+                    "le-project-thumb-btn" +
+                    (index === activeImageIndex ? " le-project-thumb-active" : "")
+                  }
+                  onClick={() => setActiveImageIndex(index)}
+                >
+                  <img
+                    src={layout.image}
+                    alt={layout.label}
+                    className="le-project-thumb-img"
+                  />
+                  <span>{layout.label}</span>
+                </button>
+              ))}
+            </div>
           </div>
 
-          <Link to="/" className="coming-back-link">
-            <motion.button
-              className="back-home-btn"
-              whileHover={{
-                y: -2,
-                boxShadow: "0 16px 30px rgba(15,23,42,0.28)",
-              }}
-              whileTap={{ scale: 0.98 }}
-            >
-              <ArrowLeft size={18} />
-              Back to Home
-            </motion.button>
-          </Link>
-        </motion.div>
-      </section>
-    </motion.div>
+          {/* RIGHT: PROJECT DETAILS CARD */}
+          <aside className="le-projects-side-card">
+            <p className="le-project-pill">{activeProject.status}</p>
+            <h2>{activeProject.name}</h2>
+            <p className="le-project-side-location">{activeProject.location}</p>
+            <p className="le-project-side-text">{activeProject.description}</p>
+
+            <div className="le-project-side-meta">
+              <div>
+                <span className="le-side-label">Development type</span>
+                <span className="le-side-value">{activeProject.type}</span>
+              </div>
+              <div>
+                <span className="le-side-label">Configuration</span>
+                <span className="le-side-value">{activeProject.units}</span>
+              </div>
+              <div>
+                <span className="le-side-label">Layout</span>
+                <span className="le-side-value">{activeProject.size}</span>
+              </div>
+            </div>
+
+            <div className="le-project-side-footer">
+              <p>
+                For full brochure, pricing and allocation details, please speak
+                with the Legit Empire sales team.
+              </p>
+              <a href="/schedule" className="le-projects-cta-btn">
+                Book site inspection
+              </a>
+            </div>
+          </aside>
+        </section>
+      )}
+    </div>
   );
 };
 
-export default ComingSoon;
+export default Projects;

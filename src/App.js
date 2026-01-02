@@ -4,7 +4,6 @@ import "./App.css";
 import { Routes, Route, Link, useLocation } from "react-router-dom";
 import { motion, AnimatePresence } from "framer-motion";
 import {
-  ChevronDown,
   Globe,
   Menu,
   X,
@@ -34,22 +33,15 @@ import Chatbot from "./components/Chatbot";
 import logo from "./assets/logo.png";
 
 function App() {
-  const [isProjectsOpen, setProjectsOpen] = useState(false);
   const [isMobileMenuOpen, setMobileMenuOpen] = useState(false);
   const location = useLocation();
 
-  const toggleProjects = () => {
-    setProjectsOpen((prev) => !prev);
-  };
-
   const closeMenu = () => {
     setMobileMenuOpen(false);
-    setProjectsOpen(false);
   };
 
   useEffect(() => {
     window.scrollTo(0, 0);
-    setProjectsOpen(false);
     setMobileMenuOpen(false);
   }, [location]);
 
@@ -77,55 +69,9 @@ function App() {
           <Link to="/" className="nav-link">
             Home
           </Link>
-
-          <div style={{ position: "relative" }}>
-            <button
-              className={`nav-link ${isProjectsOpen ? "active" : ""}`}
-              onClick={toggleProjects}
-            >
-              Portfolio{" "}
-              <ChevronDown
-                size={16}
-                style={{
-                  transform: isProjectsOpen ? "rotate(180deg)" : "rotate(0deg)",
-                  transition: "0.2s",
-                }}
-              />
-            </button>
-            <AnimatePresence>
-              {isProjectsOpen && (
-                <motion.div
-                  className="dropdown-menu"
-                  initial={{ opacity: 0, y: 15 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  exit={{ opacity: 0, y: 15 }}
-                >
-                  <Link
-                    to="/projects"
-                    className="dropdown-item"
-                    onClick={() => setProjectsOpen(false)}
-                  >
-                    Completed Projects
-                  </Link>
-                  <Link
-                    to="/projects"
-                    className="dropdown-item"
-                    onClick={() => setProjectsOpen(false)}
-                  >
-                    Ongoing Developments
-                  </Link>
-                  <Link
-                    to="/schedule"
-                    className="dropdown-item"
-                    onClick={() => setProjectsOpen(false)}
-                  >
-                    Book Site Visit
-                  </Link>
-                </motion.div>
-              )}
-            </AnimatePresence>
-          </div>
-
+          <Link to="/projects" className="nav-link">
+            Projects
+          </Link>
           <Link to="/services" className="nav-link">
             Services
           </Link>
@@ -164,67 +110,15 @@ function App() {
               animate={{ height: "auto", opacity: 1 }}
               exit={{ height: 0, opacity: 0 }}
             >
-              <button
-                className="mobile-link"
-                onClick={toggleProjects}
-                style={{
-                  display: "flex",
-                  justifyContent: "space-between",
-                  alignItems: "center",
-                  width: "100%",
-                }}
-              >
-                Portfolio
-                <ChevronDown
-                  size={18}
-                  style={{
-                    transform: isProjectsOpen
-                      ? "rotate(180deg)"
-                      : "rotate(0deg)",
-                    transition: "0.2s",
-                  }}
-                />
-              </button>
-
-              <AnimatePresence>
-                {isProjectsOpen && (
-                  <motion.div
-                    initial={{ height: 0, opacity: 0 }}
-                    animate={{ height: "auto", opacity: 1 }}
-                    exit={{ height: 0, opacity: 0 }}
-                    style={{
-                      overflow: "hidden",
-                      display: "flex",
-                      flexDirection: "column",
-                    }}
-                  >
-                    <Link
-                      to="/projects"
-                      className="mobile-sub-link"
-                      onClick={closeMenu}
-                    >
-                      Completed Projects
-                    </Link>
-                    <Link
-                      to="/projects"
-                      className="mobile-sub-link"
-                      onClick={closeMenu}
-                    >
-                      Ongoing Developments
-                    </Link>
-                    <Link
-                      to="/schedule"
-                      className="mobile-sub-link"
-                      onClick={closeMenu}
-                    >
-                      Book Site Visit
-                    </Link>
-                  </motion.div>
-                )}
-              </AnimatePresence>
-
               <Link to="/" className="mobile-link" onClick={closeMenu}>
                 Home
+              </Link>
+              <Link
+                to="/projects"
+                className="mobile-link"
+                onClick={closeMenu}
+              >
+                Projects
               </Link>
               <Link
                 to="/services"
@@ -298,7 +192,7 @@ function App() {
               <Link to="/coming-soon">Careers</Link>
             </div>
             <div className="footer-col">
-              <h4>Portfolio</h4>
+              <h4>Projects</h4>
               <Link to="/projects">Residential Estates</Link>
               <Link to="/projects">Commercial Spaces</Link>
               <Link to="/projects">Off-plan Projects</Link>
