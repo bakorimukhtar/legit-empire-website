@@ -1,52 +1,36 @@
+// src/pages/Home.js
 import React, { useState, useEffect, useRef } from "react";
-import { motion, AnimatePresence, useInView } from "framer-motion";
 import {
-  PlayCircle,
-  Users,
-  Building2,
-  ShieldCheck,
+  Calendar,
+  Building,
   MapPin,
-  Home as HomeIcon,
-  ArrowRight,
-  Sparkles,
-  BedDouble,
-  Bath,
-  Ruler,
-  ChevronLeft,
-  ChevronRight,
   Quote,
   Star,
+  ShieldAlert,
+  Award,
+  ChevronLeft,
+  ChevronRight,
+  ArrowRight,
+  Users
 } from "lucide-react";
 import { Link } from "react-router-dom";
 import "./Home.css";
 
-import heroLogo from "../assets/logo.png";
-
-const sampleExterior =
-  "https://images.unsplash.com/photo-1505843513577-22bb7d21e455?auto=format&fit=crop&w=1600&q=80";
-const sampleInterior =
-  "https://images.unsplash.com/photo-1600585154340-0ef3c08c0632?auto=format&fit=crop&w=1600&q=80";
-const sampleCity =
-  "https://images.unsplash.com/photo-1502672023488-70e25813eb80?auto=format&fit=crop&w=1600&q=80";
-
-/* ---------- HOOKS ---------- */
-
-// multi-word typewriter for headline
-const useTypewriterWords = (words, typeSpeed = 120, deleteSpeed = 80, pause = 2000) => {
+// Hook: Rotating multi-phrase typewriter
+const useTypewriterWords = (words, typeSpeed = 100, deleteSpeed = 60, pause = 1800) => {
   const [wordIndex, setWordIndex] = useState(0);
   const [display, setDisplay] = useState("");
   const [isDeleting, setIsDeleting] = useState(false);
 
   useEffect(() => {
     const currentWord = words[wordIndex];
-
     let speed = isDeleting ? deleteSpeed : typeSpeed;
 
     if (!isDeleting && display === currentWord) {
       speed = pause;
     }
     if (isDeleting && display === "") {
-      speed = 500;
+      speed = 400;
     }
 
     const timer = setTimeout(() => {
@@ -68,374 +52,418 @@ const useTypewriterWords = (words, typeSpeed = 120, deleteSpeed = 80, pause = 20
   return display;
 };
 
-// single-text typewriter
-const useTypewriter = (text, speed = 35, inView = true) => {
-  const [index, setIndex] = useState(0);
+// Component: Stats Counter
+const Counter = ({ end, suffix = "", duration = 1.5 }) => {
+  const [count, setCount] = useState(0);
+  const elementRef = useRef(null);
 
   useEffect(() => {
-    if (!inView) return;
-    if (index >= text.length) return;
+    let startTimestamp = null;
+    let alive = true;
+    
+    // Intersection Observer to start counter when in view
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach((entry) => {
+        if (entry.isIntersecting) {
+          const step = (timestamp) => {
+            if (!startTimestamp) startTimestamp = timestamp;
+            const progress = Math.min((timestamp - startTimestamp) / (duration * 1000), 1);
+            if (alive) {
+              setCount(Math.floor(progress * end));
+            }
+            if (progress < 1) {
+              window.requestAnimationFrame(step);
+            }
+          };
+          window.requestAnimationFrame(step);
+          observer.disconnect();
+        }
+      });
+    }, { threshold: 0.1 });
 
-    const timer = setTimeout(() => setIndex((prev) => prev + 1), speed);
-    return () => clearTimeout(timer);
-  }, [index, text, speed, inView]);
+    if (elementRef.current) {
+      observer.observe(elementRef.current);
+    }
 
-  // reset when re-entering view
-  useEffect(() => {
-    if (inView) setIndex(0);
-  }, [inView]);
-
-  return text.slice(0, index);
-};
-
-// count-up that restarts when inViewKey changes
-const CountUp = ({ end, duration = 4000, inViewKey }) => {
-  const [value, setValue] = useState(0);
-
-  useEffect(() => {
-    if (!inViewKey) return;
-
-    setValue(0);
-    let frame = 0;
-    const frameDuration = 1000 / 60;
-    const totalFrames = Math.round(duration / frameDuration);
-    const easeOutQuad = (t) => t * (2 - t);
-
-    const counter = setInterval(() => {
-      frame += 1;
-      const progress = easeOutQuad(frame / totalFrames);
-      const current = Math.round(end * progress);
-      setValue(current);
-      if (frame === totalFrames) clearInterval(counter);
-    }, frameDuration);
-
-    return () => clearInterval(counter);
-  }, [end, duration, inViewKey]);
-
-  return <span>{value.toLocaleString()}</span>;
-};
-
-/* ---------- SMALL COMPONENTS ---------- */
-
-const TestimonialCard = ({ item, inView }) => {
-  const typedText = useTypewriter(item.text, 25, inView);
+    return () => {
+      alive = false;
+      observer.disconnect();
+    };
+  }, [end, duration]);
 
   return (
-    <div className="le-test-card">
-      <Quote className="le-test-quote-icon" size={26} />
-      <p className="le-test-text">
-        “{typedText}
-        <span className="typing-cursor light">|</span>”
+    <span ref={elementRef} className="stat-num">
+      {count}
+      {suffix}
+    </span>
+  );
+};
+
+// Component: Typewriter Testimonial Card
+function TestimonialCard({ quote, name, role, stars }) {
+  const [displayedText, setDisplayedText] = useState("");
+  const cardRef = useRef(null);
+
+  useEffect(() => {
+    let alive = true;
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach((entry) => {
+        if (entry.isIntersecting) {
+          let i = 0;
+          const interval = setInterval(() => {
+            if (alive) {
+              setDisplayedText((prev) => prev + quote.charAt(i));
+            }
+            i++;
+            if (i >= quote.length) {
+              clearInterval(interval);
+            }
+          }, 20);
+          observer.disconnect();
+        }
+      });
+    }, { threshold: 0.1 });
+
+    if (cardRef.current) {
+      observer.observe(cardRef.current);
+    }
+
+    return () => {
+      alive = false;
+      observer.disconnect();
+    };
+  }, [quote]);
+
+  return (
+    <div className="test-card" ref={cardRef}>
+      <Quote className="test-quote-icon" size={24} />
+      <p className="test-text">
+        <span>{displayedText}</span>
+        {displayedText.length < quote.length && <span className="test-cursor">&nbsp;</span>}
       </p>
-      <div className="le-test-rating">
-        {Array.from({ length: 5 }).map((_, i) => (
-          <Star
-            key={i}
-            size={18}
-            className={i < item.rating ? "le-star filled" : "le-star empty"}
+      <div className="test-stars">
+        {Array.from({ length: 5 }).map((_, idx) => (
+          <Star 
+            key={idx} 
+            className={idx < stars ? "star-filled" : "star-empty"} 
+            size={14} 
+            fill={idx < stars ? "var(--brass)" : "none"} 
           />
         ))}
       </div>
-      <div className="le-test-person">
-        <span className="le-test-name">{item.name}</span>
-        <span className="le-test-role">{item.role}</span>
+      <div className="test-person">
+        <span className="test-name">{name}</span>
+        <span className="test-role">{role}</span>
       </div>
     </div>
   );
-};
+}
 
-/* ---------- MAIN COMPONENT ---------- */
+function Home() {
+  const phrases = ["Luxury Apartments", "Gated Communities", "Prime City Plots", "Mixed-Use Developments"];
+  const rotatingHeadline = useTypewriterWords(phrases);
 
-const Home = () => {
-  const [currentProject, setCurrentProject] = useState(0);
+  const [projectIndex, setProjectIndex] = useState(0);
+  const [projects, setProjects] = useState([]);
+  const [loading, setLoading] = useState(true);
 
-  const rotatingHeadlines = [
-    "Luxury Apartments",
-    "Gated Communities",
-    "Prime City Plots",
-    "Mixed‑Use Developments",
-  ];
-
-  const heroTyped = useTypewriterWords(rotatingHeadlines, 120, 80, 2000);
-
-  const statsData = [
+  const fallbackProjects = [
     {
-      icon: <Building2 size={40} />,
-      number: 18,
-      suffix: "+",
-      label: "Completed projects",
-    },
-    {
-      icon: <HomeIcon size={40} />,
-      number: 1200,
-      suffix: "+",
-      label: "Delivered units",
-    },
-    {
-      icon: <MapPin size={40} />,
-      number: 3,
-      suffix: "",
-      label: "States in Nigeria",
-    },
-  ];
-
-  const projects = [
-    {
+      id: 1,
       name: "Empire Residences Phase 1",
       location: "Gwarinpa, Abuja",
-      img: sampleExterior,
-      beds: 3,
-      baths: 3,
+      type: "Residential Estate",
       size: "210 sqm",
-      tag: "Sold Out",
+      status: "Sold Out",
+      coverImage: "https://images.unsplash.com/photo-1505843513577-22bb7d21e455?auto=format&fit=crop&w=1200&q=80"
     },
     {
+      id: 2,
       name: "Legit Gardens Estate",
       location: "Lekki, Lagos",
-      img: sampleInterior,
-      beds: 4,
-      baths: 4,
+      type: "Residential Estate",
       size: "320 sqm",
-      tag: "Under Construction",
+      status: "Under Construction",
+      coverImage: "https://images.unsplash.com/photo-1600585154340-0ef3c08c0632?auto=format&fit=crop&w=1200&q=80"
     },
     {
+      id: 3,
       name: "Empire Towers",
-      location: "Central Business District",
-      img: sampleCity,
-      beds: 2,
-      baths: 2,
+      location: "Central Business District, Abuja",
+      type: "Commercial",
       size: "145 sqm",
-      tag: "Now Selling",
-    },
+      status: "Now Selling",
+      coverImage: "https://images.unsplash.com/photo-1502672023488-70e25813eb80?auto=format&fit=crop&w=1200&q=80"
+    }
   ];
 
-  const testimonials = [
-    {
-      name: "Mrs. Amina Yusuf",
-      role: "Homeowner, Empire Residences",
-      text: "Legit Empire delivered exactly what was promised. The finishing, documentation and follow‑up support made the entire process stress‑free for my family.",
-      rating: 5,
-    },
-    {
-      name: "Mr. Ishaq",
-      role: "Investor, Legit Gardens",
-      text: "From inspection to allocation, the team was transparent and professional. I feel confident recommending them to serious property investors.",
-      rating: 5,
-    },
-    {
-      name: "Engr. Bello",
-      role: "Corporate client",
-      text: "Their understanding of both design and long‑term maintenance makes them a strong partner for our staff housing projects.",
-      rating: 4,
-    },
-  ];
+  // Fetch published projects dynamically from database
+  useEffect(() => {
+    let alive = true;
+    (async () => {
+      try {
+        const res = await fetch("https://admin.legitempirerealestate.com/api/website/listprojects.php", {
+          headers: { Accept: "application/json" }
+        });
+        const data = await res.json();
+        if (data?.ok && Array.isArray(data.projects) && data.projects.length > 0) {
+          if (alive) {
+            setProjects(data.projects);
+          }
+        } else if (alive) {
+          setProjects(fallbackProjects);
+        }
+      } catch (err) {
+        console.warn("Home projects fetch failed, using fallback static data:", err);
+        if (alive) {
+          setProjects(fallbackProjects);
+        }
+      } finally {
+        if (alive) setLoading(false);
+      }
+    })();
+    return () => {
+      alive = false;
+    };
+  }, []);
 
-  const nextProject = () =>
-    setCurrentProject((p) => (p + 1) % projects.length);
-  const prevProject = () =>
-    setCurrentProject((p) => (p - 1 + projects.length) % projects.length);
-
-  const statsContainerVariant = {
-    hidden: { opacity: 0 },
-    visible: { opacity: 1, transition: { staggerChildren: 0.2 } },
-  };
-  const statItemVariant = {
-    hidden: { opacity: 0, y: 40 },
-    visible: {
-      opacity: 1,
-      y: 0,
-      transition: { duration: 0.6, ease: "easeOut" },
-    },
+  const handleNextProject = () => {
+    if (projects.length === 0) return;
+    setProjectIndex((prev) => (prev + 1) % projects.length);
   };
 
-  // in-view tracking
-  const statsRef = useRef(null);
-  const statsInView = useInView(statsRef, { amount: 0.4 });
-
-  const testRef = useRef(null);
-  const testsInView = useInView(testRef, { amount: 0.3 });
+  const handlePrevProject = () => {
+    if (projects.length === 0) return;
+    setProjectIndex((prev) => (prev - 1 + projects.length) % projects.length);
+  };
 
   return (
-    <div className="le-home">
-      {/* HERO */}
-      <section className="le-hero">
-        <div className="le-hero-blobs">
-          <div className="le-blob le-blob-1" />
-          <div className="le-blob le-blob-2" />
-        </div>
+    <div className="Home">
+      {/* HERO SECTION */}
+      <section className="hero">
+        {/* Architectural self-drawing blueprint skyline graphic */}
+        <svg className="skyline-bg" id="heroSkyline" viewBox="0 0 640 460" xmlns="http://www.w3.org/2000/svg" style={{ zIndex: 0 }}>
+          <polyline points="20,220 220,80 260,104 300,84 620,220" stroke="var(--clay)" strokeWidth="1.4" fill="none" opacity="0.28" />
+          <rect x="250" y="60" width="90" height="330" stroke="var(--clay)" strokeWidth="1.4" fill="none" opacity="0.28" />
+          <rect x="360" y="130" width="60" height="260" stroke="var(--clay)" strokeWidth="1.4" fill="none" opacity="0.28" />
+          <rect x="430" y="170" width="52" height="220" stroke="var(--clay)" strokeWidth="1.4" fill="none" opacity="0.28" />
+          <rect x="60" y="220" width="140" height="170" stroke="var(--clay)" strokeWidth="1.4" fill="none" opacity="0.28" />
+          <line x1="0" y1="390" x2="640" y2="390" stroke="var(--clay)" strokeWidth="1.4" fill="none" opacity="0.28" />
+        </svg>
 
-        <div className="le-hero-grid">
-          <motion.div
-            className="le-hero-text"
-            initial={{ opacity: 0, x: -40 }}
-            whileInView={{ opacity: 1, x: 0 }}
-            viewport={{ amount: 0.4 }}
-            transition={{ duration: 0.7 }}
-          >
-            <div className="le-hero-pill">
-              <ShieldCheck size={22} />
-              <span>Trusted Nigerian Real Estate Developer</span>
+        <div className="wrap hero-grid">
+          <div className="hero-text reveal">
+            <div className="eyebrow" style={{ marginBottom: "16px" }}>
+              <Building size={14} style={{ marginRight: "4px" }} />
+              Trusted Nigerian Real Estate Developer
             </div>
-
-            <h1 className="le-hero-title">
-              Building{" "}
-              <span className="le-hero-gradient">
-                <span className="typing-text">
-                  {heroTyped}
-                  <span className="typing-cursor">|</span>
-                </span>
-              </span>{" "}
-              that stand the test of time.
+            <h1 className="hero-title">
+              Building <span className="rot-wrap"><span>{rotatingHeadline}</span><span className="rot-cursor">&nbsp;</span></span><br />
+              that stands the test of time.
             </h1>
-
-            <p className="le-hero-sub">
-              Legit Empire designs and delivers modern homes, estates and
-              investment‑grade properties for homeowners and investors across
-              Nigeria.
+            <p className="hero-sub" style={{ maxWidth: "100%" }}>
+              Legit Empire designs and delivers modern homes, estates and investment-grade properties for homeowners and investors across Nigeria.
             </p>
-
-            <div className="le-hero-actions">
-              <Link to="/schedule">
-                <button className="btn-primary">Schedule a visit</button>
+            <div className="hero-actions">
+              <Link to="/schedule" className="btn btn-primary">
+                Schedule a visit
               </Link>
-              <button className="le-hero-secondary">
-                <PlayCircle size={22} />
-                Watch project tour
-              </button>
+              <Link to="/projects" className="btn btn-ghost">
+                Explore Projects
+              </Link>
             </div>
-
-            <div className="le-hero-meta">
-              <div>
-                <span className="le-meta-label">Project focus</span>
-                <span className="le-meta-value">
-                  Residential • Commercial • Mixed‑use
-                </span>
+            <div className="hero-meta-cards">
+              <div className="meta-card">
+                <div className="meta-card-icon">
+                  <Building size={20} />
+                </div>
+                <div className="meta-card-content">
+                  <span className="meta-label">Project focus</span>
+                  <span className="meta-value">Residential · Commercial · Mixed-use</span>
+                </div>
               </div>
-              <div>
-                <span className="le-meta-label">Buyers served</span>
-                <span className="le-meta-value">
-                  First‑time & seasoned investors
-                </span>
-              </div>
-            </div>
-          </motion.div>
-
-          <motion.div
-            className="le-hero-media"
-            initial={{ opacity: 0, x: 40 }}
-            whileInView={{ opacity: 1, x: 0 }}
-            viewport={{ amount: 0.4 }}
-            transition={{ duration: 0.8, delay: 0.1 }}
-          >
-            <div className="le-hero-card">
-              <img src={heroLogo} alt="Legit Empire" className="le-hero-logo" />
-              <img
-                src={projects[2].img}
-                alt="Featured development"
-                className="le-hero-mainimg"
-              />
-              <div className="le-hero-badge">
-                <Building2 size={18} />
-                <span>Premium developments • Turnkey delivery</span>
-              </div>
-              <div className="le-hero-small-card">
-                <h4>Empire Towers</h4>
-                <p>Grade‑A apartments in the heart of the city.</p>
+              <div className="meta-card">
+                <div className="meta-card-icon">
+                  <Users size={20} />
+                </div>
+                <div className="meta-card-content">
+                  <span className="meta-label">Buyers served</span>
+                  <span className="meta-value">Investors & Families</span>
+                </div>
               </div>
             </div>
-          </motion.div>
+          </div>
         </div>
       </section>
 
-      {/* STATS */}
-      <section className="le-stats" ref={statsRef}>
-        <motion.div
-          className="le-stats-grid"
-          variants={statsContainerVariant}
-          initial="hidden"
-          whileInView="visible"
-          viewport={{ amount: 0.3 }}
-        >
-          {statsData.map((item) => (
-            <motion.div
-              key={item.label}
-              className="le-stat-item"
-              variants={statItemVariant}
-            >
-              <div className="le-stat-icon">{item.icon}</div>
-              <div>
-                <h3>
-                  <CountUp
-                    end={item.number}
-                    duration={3500}
-                    inViewKey={statsInView}
-                  />
-                  {item.suffix}
-                </h3>
-                <p>{item.label}</p>
-              </div>
-            </motion.div>
-          ))}
-        </motion.div>
-      </section>
-
-      {/* WHY */}
-      {/* ... keep your WHY and PROJECTS sections exactly as you already have them ... */}
-
-      {/* TESTIMONIALS / REVIEWS */}
-      <section className="le-testimonials" ref={testRef}>
-        <motion.div
-          className="le-section-header le-test-header"
-          initial={{ opacity: 0, y: 40 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ amount: 0.4 }}
-          transition={{ duration: 0.6 }}
-        >
-          <div className="le-section-pill">
-            <Sparkles size={18} />
-            Client testimonials
+      {/* STATS SECTION */}
+      <section className="stats">
+        <div className="wrap stats-grid reveal-stagger">
+          <div className="stat-item">
+            <Counter end={18} suffix="+" />
+            <span className="stat-label">Completed projects</span>
           </div>
-          <h2>What our clients say about Legit Empire.</h2>
-          <p>
-            Real feedback from homeowners and investors who trusted us with
-            their property goals.
-          </p>
-        </motion.div>
-
-        <motion.div
-          className="le-test-grid"
-          initial={{ opacity: 0, y: 40 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ amount: 0.4 }}
-          transition={{ duration: 0.6, delay: 0.1 }}
-        >
-          {testimonials.map((item, idx) => (
-            <TestimonialCard key={idx} item={item} inView={testsInView} />
-          ))}
-        </motion.div>
+          <div className="stat-item">
+            <Counter end={1200} suffix="+" />
+            <span className="stat-label">Delivered units</span>
+          </div>
+          <div className="stat-item">
+            <Counter end={3} suffix="" />
+            <span className="stat-label">States in Nigeria</span>
+          </div>
+        </div>
       </section>
-{/* CTA STRIP */}
-<section className="le-cta">
-        <div className="le-cta-inner">
-          <div>
+
+      {/* WHY CHOOSE US SECTION */}
+      <section className="block">
+        <div className="wrap">
+          <div className="section-head reveal">
+            <div className="eyebrow">Section 02 — Why Legit Empire</div>
+            <h2>Every plot comes with a paper trail you can trust.</h2>
+            <p>From title documentation to final handover, we build the way we'd want to buy — transparent, on schedule, and made to hold its value.</p>
+          </div>
+          <div className="why-grid reveal-stagger">
+            <div className="why-card" data-index="A">
+              <ShieldAlert className="why-icon" size={40} />
+              <h3>Transparent from day one</h3>
+              <p>Every allocation, payment plan and title document is laid out before you commit — no surprises at handover.</p>
+            </div>
+            <div className="why-card" data-index="B">
+              <Building className="why-icon" size={40} />
+              <h3>Built to last</h3>
+              <p>Materials, structural review and finishing are chosen for decades of use, not just a good first impression.</p>
+            </div>
+            <div className="why-card" data-index="C">
+              <Award className="why-icon" size={40} />
+              <h3>Trusted across Nigeria</h3>
+              <p>18+ completed projects and 1,200+ units delivered across three states — a track record families check for themselves.</p>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* PROJECTS SECTION */}
+      <section className="block" id="projects" style={{ background: "var(--paper-dim)" }}>
+        <div className="wrap">
+          <div className="projects-head reveal">
+            <div>
+              <div className="eyebrow">Section 03 — Current Plots</div>
+              <h2>Portfolio</h2>
+            </div>
+            {projects.length > 1 && (
+              <div className="proj-nav-group">
+                <button className="proj-nav" onClick={handlePrevProject} aria-label="Previous project">
+                  <ChevronLeft size={20} />
+                </button>
+                <button className="proj-nav" onClick={handleNextProject} aria-label="Next project">
+                  <ChevronRight size={20} />
+                </button>
+              </div>
+            )}
+          </div>
+
+          <div className="proj-viewport reveal">
+            {loading ? (
+              <div style={{ padding: "40px 0", textAlign: "center", color: "var(--ink-50)", fontFamily: "Space Grotesk, monospace" }}>
+                Connecting to database...
+              </div>
+            ) : projects.length === 0 ? (
+              <div style={{ padding: "40px 0", textAlign: "center", color: "var(--ink-50)", fontFamily: "Space Grotesk, monospace" }}>
+                No active developments published.
+              </div>
+            ) : (
+              <div className="proj-track" style={{ transform: `translateX(-${projectIndex * 100}%)` }}>
+                {projects.map((proj) => (
+                  <div key={proj.id} className="project-card">
+                    <div className="project-imgwrap">
+                      <img src={proj.coverImage || "https://images.unsplash.com/photo-1505843513577-22bb7d21e455?auto=format&fit=crop&w=1200&q=80"} alt={proj.name} />
+                      <span className="plot-status">{proj.status || "Ongoing"}</span>
+                    </div>
+                    <div className="project-body">
+                      <h3>{proj.name}</h3>
+                      <div className="project-loc">
+                        <MapPin size={15} />
+                        {proj.location}
+                      </div>
+                      <div className="project-specs">
+                        {proj.type && <span className="spec">{proj.type}</span>}
+                        {proj.units && <span className="spec">{proj.units} units</span>}
+                        {proj.size && <span className="spec">{proj.size}</span>}
+                      </div>
+                      <Link to="/projects" className="proj-link">
+                        View details <ArrowRight size={14} style={{ marginLeft: "4px" }} />
+                      </Link>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            )}
+          </div>
+          {projects.length > 1 && (
+            <div className="proj-dots">
+              {projects.map((_, idx) => (
+                <button
+                  key={idx}
+                  className={`proj-dot ${idx === projectIndex ? "active" : ""}`}
+                  onClick={() => setProjectIndex(idx)}
+                  aria-label={`Go to project ${idx + 1}`}
+                />
+              ))}
+            </div>
+          )}
+        </div>
+      </section>
+
+      {/* TESTIMONIALS SECTION */}
+      <section className="block">
+        <div className="wrap">
+          <div className="section-head reveal">
+            <div className="eyebrow">Section 04 — Client Notes</div>
+            <h2>What our clients say about Legit Empire.</h2>
+            <p>Real feedback from homeowners and investors who trusted us with their property goals.</p>
+          </div>
+          <div className="test-grid reveal-stagger">
+            <TestimonialCard 
+              quote="Legit Empire delivered exactly what was promised. The finishing, documentation and follow-up support made the entire process stress-free for my family."
+              name="Mrs. Amina Yusuf"
+              role="Homeowner, Empire Residences"
+              stars={5}
+            />
+            <TestimonialCard 
+              quote="From inspection to allocation, the team was transparent and professional. I feel confident recommending them to serious property investors."
+              name="Mr. Ishaq"
+              role="Investor, Legit Gardens"
+              stars={5}
+            />
+            <TestimonialCard 
+              quote="Their understanding of both design and long-term maintenance makes them a strong partner for our staff housing projects."
+              name="Engr. Bello"
+              role="Corporate client"
+              stars={4}
+            />
+          </div>
+        </div>
+      </section>
+
+      {/* CALL TO ACTION SECTION */}
+      <div className="wrap cta-wrap">
+        <div className="cta-band reveal">
+          <div className="cta-text">
             <h2>Ready to inspect a property or start a new project?</h2>
-            <p>
-              Book a guided site visit or speak with our team about custom
-              developments and bulk purchases.
-            </p>
+            <p>Book a guided site visit or speak with our team about custom developments and bulk purchases.</p>
           </div>
-          <div className="le-cta-actions">
-            <Link to="/schedule">
-              <button className="btn-primary">Book inspection</button>
+          <div className="cta-actions">
+            <Link to="/schedule" className="btn btn-primary">
+              Book inspection
             </Link>
-            <Link to="/contact">
-              <button className="le-cta-outline">Talk to our team</button>
+            <Link to="/contact" className="btn btn-ghost-light">
+              Talk to our team
             </Link>
           </div>
         </div>
-      </section>
+      </div>
     </div>
   );
-};
+}
 
 export default Home;

@@ -1,5 +1,6 @@
 import React from "react";
 import "./Services.css";
+import SEO from "../components/SEO";
 import { motion } from "framer-motion";
 import {
   Building2,
@@ -64,6 +65,11 @@ const Services = () => {
 
   return (
     <div className="services-page">
+      <SEO
+        title="Our Real Estate & Development Services | Legit Empire"
+        description="From bespoke property development and facility management to construction planning and affiliate schemes. Learn how Legit Empire delivers trusted property wealth."
+        keywords="estate development nigeria, joint venture real estate, land acquisition abuja, property advisory, legit empire services"
+      />
       {/* HERO */}
       <section className="services-hero">
         <motion.div

@@ -1,269 +1,332 @@
+/* src/pages/Projects.css */
+
 .le-projects-page {
-  max-width: 1120px;
-  margin: 0 auto;
-  padding: 10px 0 0;
-  color: var(--text-main);
+  background: var(--paper);
+  color: var(--ink);
+  padding-bottom: 88px;
 }
 
-/* HERO */
-
+/* ============================================================
+   PROJECTS HERO
+   ============================================================ */
 .le-projects-hero {
+  padding: 88px 6vw 44px;
+  max-width: 1280px;
+  margin: 0 auto;
   display: flex;
   justify-content: space-between;
   align-items: flex-end;
-  gap: 32px;
-  margin-bottom: 28px;
+  gap: 36px;
+  flex-wrap: wrap;
+  border-bottom: 1px solid var(--line);
 }
 
 .le-badge {
   display: inline-block;
-  padding: 4px 10px;
-  border-radius: 999px;
-  background: rgba(139, 69, 19, 0.08);
-  color: var(--brand-brown-dark);
-  font-size: 12px;
-  font-weight: 600;
-  letter-spacing: 0.08em;
+  font-family: 'Space Grotesk', monospace;
+  font-size: 11px;
+  letter-spacing: 0.12em;
   text-transform: uppercase;
+  color: var(--clay);
+  border: 1px solid var(--line);
+  padding: 6px 14px;
+  border-radius: 999px;
+  margin-bottom: 16px;
 }
 
 .le-projects-hero h1 {
-  margin: 10px 0 8px;
-  font-size: clamp(26px, 3vw, 32px);
-  color: var(--brand-brown-dark);
+  font-family: 'Fraunces', serif;
+  font-size: clamp(30px, 4vw, 48px);
+  line-height: 1.15;
+  margin: 0 0 10px;
+  color: var(--ink);
 }
 
 .le-projects-sub {
+  font-size: 15px;
+  color: var(--ink-70);
   margin: 0;
-  font-size: 14px;
-  color: var(--text-muted);
-  max-width: 520px;
 }
 
 .le-projects-hero-meta {
   display: flex;
-  gap: 20px;
+  gap: 32px;
 }
 
 .le-meta-label {
   display: block;
-  font-size: 11px;
-  text-transform: uppercase;
+  font-family: 'Space Grotesk', monospace;
+  font-size: 10px;
   letter-spacing: 0.08em;
-  color: var(--text-muted);
+  text-transform: uppercase;
+  color: var(--ink-50);
+  margin-bottom: 6px;
 }
 
 .le-meta-value {
-  font-size: 18px;
+  font-size: 14px;
   font-weight: 600;
-  color: var(--brand-brown-dark);
+  color: var(--ink);
 }
 
-/* FILTERS */
+@media (max-width: 768px) {
+  .le-projects-hero { flex-direction: column; align-items: flex-start; gap: 24px; }
+  .le-projects-hero-meta { width: 100%; border-top: 1px dashed var(--line); padding-top: 20px; }
+}
 
+/* ============================================================
+   FILTERS
+   ============================================================ */
 .le-projects-filters {
+  max-width: 1280px;
+  margin: 32px auto 0;
+  padding: 0 6vw;
   display: flex;
   flex-wrap: wrap;
-  gap: 8px;
-  margin-bottom: 20px;
+  gap: 10px;
 }
 
 .le-filter-chip {
-  border-radius: 999px;
-  border: 1px solid rgba(0, 0, 0, 0.06);
-  padding: 6px 14px;
+  font-family: 'Space Grotesk', monospace;
   font-size: 12px;
-  background: #fff;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  background: var(--paper-dim);
+  border: 1px solid var(--line);
+  color: var(--ink-70);
+  padding: 8px 18px;
+  border-radius: 999px;
   cursor: pointer;
-  color: var(--text-main);
+  transition: all 0.2s var(--ease);
+}
+
+.le-filter-chip:hover {
+  background: rgba(228, 179, 104, 0.08);
+  color: var(--ink);
 }
 
 .le-filter-chip-active {
-  background: var(--brand-brown);
-  color: #fff;
-  border-color: transparent;
+  background: var(--ink);
+  color: var(--paper);
+  border-color: var(--ink);
 }
 
-/* MAIN LAYOUT */
+.le-filter-chip-active:hover {
+  background: var(--ink-soft);
+  color: var(--paper);
+}
 
+/* ============================================================
+   PORTFOLIO GRID LAYOUT
+   ============================================================ */
 .le-projects-layout {
+  max-width: 1280px;
+  margin: 40px auto 0;
+  padding: 0 6vw;
   display: grid;
-  grid-template-columns: minmax(0, 1.7fr) minmax(0, 1.1fr);
-  gap: 26px;
+  grid-template-columns: 1.15fr 0.85fr;
+  gap: 40px;
+  align-items: flex-start;
 }
 
-/* GALLERY */
-
+/* Main Image View */
 .le-projects-gallery {
-  background: #ffffff;
-  border-radius: 20px;
-  box-shadow: 0 18px 40px rgba(15, 23, 42, 0.09);
-  border: 1px solid rgba(0, 0, 0, 0.03);
-  padding: 14px 14px 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
 }
 
 .le-projects-main-image {
   position: relative;
-  border-radius: 16px;
+  border-radius: var(--radius-lg);
   overflow: hidden;
-  margin-bottom: 10px;
+  border: 1px solid var(--line);
+  box-shadow: 0 20px 40px rgba(27,20,13,0.05);
+  background: var(--paper-dim);
+  height: 480px;
 }
 
 .le-projects-main-img {
   width: 100%;
-  max-height: 360px;
+  height: 100%;
   object-fit: cover;
-  display: block;
+  transition: transform 0.5s ease;
 }
 
 .le-projects-main-caption {
   position: absolute;
-  bottom: 10px;
-  left: 10px;
-  padding: 4px 10px;
-  border-radius: 999px;
-  background: rgba(0, 0, 0, 0.7);
-  color: #ffffff;
-  font-size: 11px;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  background: linear-gradient(to top, rgba(27,20,13,0.85) 0%, transparent 100%);
+  padding: 30px 24px 20px;
+  color: var(--paper);
+  font-family: 'Space Grotesk', monospace;
+  font-size: 13px;
+  letter-spacing: 0.02em;
 }
 
+/* Thumbnails */
 .le-projects-thumbs {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
-  gap: 8px;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 12px;
 }
 
 .le-project-thumb-btn {
-  border-radius: 12px;
-  border: 1px solid rgba(148, 163, 184, 0.45);
-  padding: 4px;
-  background: #f9fafb;
+  background: var(--paper);
+  border: 1px solid var(--line);
+  border-radius: var(--radius-md);
+  padding: 8px;
   cursor: pointer;
   display: flex;
   flex-direction: column;
-  gap: 4px;
+  gap: 6px;
   text-align: left;
+  transition: all 0.2s ease;
+}
+
+.le-project-thumb-btn:hover {
+  background: var(--paper-dim);
+  border-color: var(--brass-light);
+}
+
+.le-project-thumb-active {
+  border-color: var(--brass);
+  background: rgba(228, 179, 104, 0.05);
 }
 
 .le-project-thumb-img {
   width: 100%;
-  height: 80px;
+  height: 70px;
   object-fit: cover;
-  border-radius: 8px;
-  display: block;
+  border-radius: var(--radius-sm);
 }
 
 .le-project-thumb-btn span {
-  font-size: 11px;
-  color: #4b5563;
+  font-size: 10.5px;
+  font-weight: 600;
+  color: var(--ink-70);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  width: 100%;
+  display: block;
 }
 
-.le-project-thumb-active {
-  border-color: var(--brand-brown);
-  background: #fff7ec;
+@media (max-width: 900px) {
+  .le-projects-layout { grid-template-columns: 1fr; gap: 32px; }
+  .le-projects-main-image { height: 340px; }
+  .le-project-thumb-img { height: 50px; }
 }
 
-/* SIDE CARD */
-
+/* ============================================================
+   PROJECT DETAILS CARD
+   ============================================================ */
 .le-projects-side-card {
-  border-radius: 20px;
-  padding: 18px 18px 20px;
-  background: #fff7ec;
-  border: 1px solid rgba(148, 163, 184, 0.5);
-  display: flex;
-  flex-direction: column;
-  gap: 10px;
+  background: var(--paper-dim);
+  border: 1px solid var(--line);
+  border-radius: var(--radius-lg);
+  padding: 40px;
+  box-shadow: 0 15px 35px rgba(27,20,13,0.02);
 }
 
 .le-project-pill {
-  display: inline-flex;
-  padding: 4px 10px;
-  border-radius: 999px;
-  background: rgba(34, 197, 94, 0.12);
-  color: #047857;
-  font-size: 11px;
+  display: inline-block;
+  font-family: 'Space Grotesk', monospace;
+  font-size: 10px;
   font-weight: 600;
   text-transform: uppercase;
-  letter-spacing: 0.08em;
+  letter-spacing: 0.05em;
+  background: rgba(192, 138, 62, 0.08);
+  color: var(--brass);
+  border: 1px solid rgba(192, 138, 62, 0.18);
+  padding: 5px 12px;
+  border-radius: 999px;
+  margin-bottom: 20px;
 }
 
 .le-projects-side-card h2 {
-  margin: 4px 0 0;
-  font-size: 20px;
-  color: var(--brand-brown-dark);
+  font-family: 'Fraunces', serif;
+  font-size: clamp(24px, 3vw, 32px);
+  line-height: 1.2;
+  margin: 0 0 8px;
+  color: var(--ink);
 }
 
 .le-project-side-location {
-  margin: 0;
-  font-size: 13px;
-  color: var(--text-muted);
+  font-size: 14px;
+  color: var(--ink-50);
+  margin-bottom: 24px;
 }
 
 .le-project-side-text {
-  margin: 6px 0 4px;
-  font-size: 13px;
-  color: var(--text-muted);
+  font-size: 14.5px;
+  line-height: 1.65;
+  color: var(--ink-70);
+  margin: 0 0 32px;
 }
 
 .le-project-side-meta {
-  display: grid;
-  grid-template-columns: 1fr;
-  gap: 10px;
-  margin: 8px 0 6px;
+  border-top: 1px dashed var(--line);
+  padding-top: 24px;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  margin-bottom: 32px;
+}
+
+.le-project-side-meta > div {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-size: 13.5px;
 }
 
 .le-side-label {
-  display: block;
-  font-size: 11px;
-  text-transform: uppercase;
-  letter-spacing: 0.08em;
-  color: #6b7280;
+  color: var(--ink-50);
 }
 
 .le-side-value {
-  display: block;
-  font-size: 13px;
-  font-weight: 500;
-  color: #111827;
+  font-weight: 600;
+  color: var(--ink);
+}
+
+.le-project-side-footer {
+  border-top: 1px solid var(--line);
+  padding-top: 24px;
 }
 
 .le-project-side-footer p {
-  margin: 4px 0 10px;
-  font-size: 12px;
-  color: #6b7280;
+  font-size: 12.5px;
+  line-height: 1.6;
+  color: var(--ink-50);
+  margin: 0 0 20px;
 }
 
 .le-projects-cta-btn {
-  display: inline-block;
-  border-radius: 999px;
-  padding: 8px 18px;
-  background: linear-gradient(
-    135deg,
-    var(--brand-brown),
-    var(--brand-brown-dark)
-  );
-  color: #ffffff;
+  font-family: 'Space Grotesk', monospace;
   font-size: 12px;
   font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  padding: 13px 26px;
+  border-radius: 999px;
+  background: var(--ink);
+  color: var(--paper);
+  border: none;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  cursor: pointer;
   text-decoration: none;
-  box-shadow: 0 10px 24px rgba(139, 69, 19, 0.35);
+  transition: all 0.2s ease;
+  box-shadow: 0 10px 24px rgba(27,20,13,0.06);
 }
 
-/* RESPONSIVE */
-
-@media (max-width: 960px) {
-  .le-projects-hero {
-    flex-direction: column;
-    align-items: flex-start;
-  }
-
-  .le-projects-layout {
-    grid-template-columns: 1fr;
-  }
-}
-
-@media (max-width: 640px) {
-  .le-projects-page {
-    padding-inline: 5vw;
-  }
+.le-projects-cta-btn:hover {
+  background: var(--clay);
+  transform: translateY(-2px);
 }

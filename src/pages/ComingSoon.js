@@ -1,5 +1,6 @@
 import React, { useEffect } from "react";
 import "./ComingSoon.css";
+import SEO from "../components/SEO";
 import { motion } from "framer-motion";
 import { Hammer, ArrowLeft, Rocket } from "lucide-react";
 import { Link } from "react-router-dom";
@@ -16,6 +17,11 @@ const ComingSoon = () => {
       animate={{ opacity: 1 }}
       exit={{ opacity: 0 }}
     >
+      <SEO
+        title="Upcoming Property Launches & Estates | Legit Empire"
+        description="Exciting new developments are on the horizon. Explore our upcoming gated estates, luxury apartments, and off-plan properties in Nigeria."
+        keywords="upcoming real estate nigeria, off-plan properties abuja, luxury developments lagos"
+      />
       <section className="coming-soon-wrapper">
         <motion.div
           className="coming-soon-card"

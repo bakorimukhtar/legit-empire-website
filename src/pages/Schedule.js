@@ -1,5 +1,6 @@
-import React, { useState } from "react";
+import React, { useEffect, useMemo, useState } from "react";
 import "./Schedule.css";
+import SEO from "../components/SEO";
 import { motion } from "framer-motion";
 import {
   CalendarDays,
@@ -11,10 +12,12 @@ import {
 } from "lucide-react";
 import { Link } from "react-router-dom";
 
+const ADMIN_ORIGIN = "https://admin.legitempirerealestate.com";
+
 const fadeUp = {
   initial: { y: 30, opacity: 0 },
   whileInView: { y: 0, opacity: 1 },
-  viewport: { margin: "-100px" }, // replays on scroll
+  viewport: { margin: "-100px" },
   transition: { duration: 0.6, ease: "easeOut" },
 };
 
@@ -24,40 +27,166 @@ const Schedule = () => {
     email: "",
     phone: "",
     city: "Abuja",
-    preferredEstate: "",
+    projectId: "",       // Required dropdown
     visitDate: "",
     visitTime: "",
     guests: "1",
     notes: "",
   });
 
+  const [projects, setProjects] = useState([]);
+  const [projectsLoading, setProjectsLoading] = useState(true);
+  const [projectsError, setProjectsError] = useState("");
+
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [showConfirm, setShowConfirm] = useState(false);
+  const [submitError, setSubmitError] = useState("");
+
+  const projectOptions = useMemo(() => {
+    return (projects || []).map((p) => ({
+      id: String(p.id),
+      label: String(p.label || p.name || "Unnamed project"),
+    }));
+  }, [projects]);
 
   const handleChange = (e) => {
     setFormData((prev) => ({ ...prev, [e.target.name]: e.target.value }));
   };
 
-  const handleSubmit = (e) => {
-    e.preventDefault();
-    setIsSubmitting(true);
-
-    setTimeout(() => {
-      console.log("Visit scheduled:", formData);
-      setIsSubmitting(false);
-      setShowConfirm(true);
-    }, 1500);
-  };
-
   const closeConfirm = () => setShowConfirm(false);
 
+  function buildScheduledAt(dateStr, timeStr) {
+    if (!dateStr || !timeStr) return "";
+    return `${dateStr}T${timeStr}`;
+  }
+
+  async function readJsonSafe(res) {
+    const text = await res.text();
+    try {
+      return JSON.parse(text);
+    } catch {
+      throw new Error(`Server returned non-JSON (HTTP ${res.status}).`);
+    }
+  }
+
+  // Load published projects for dropdown selection
+  useEffect(() => {
+    let alive = true;
+
+    (async () => {
+      setProjectsLoading(true);
+      setProjectsError("");
+
+      try {
+        const url = new URL("/api/website/get.php", ADMIN_ORIGIN);
+        const res = await fetch(url.toString(), {
+          method: "GET",
+          headers: { Accept: "application/json" },
+        });
+
+        const data = await readJsonSafe(res);
+        if (!res.ok || !data?.ok) throw new Error(data?.message || "Could not load estates.");
+
+        const rows = Array.isArray(data.projects) ? data.projects : [];
+        if (!alive) return;
+
+        setProjects(rows);
+
+        // Auto-select first project for better UX
+        setFormData((prev) => {
+          if (prev.projectId) return prev;
+          return rows.length ? { ...prev, projectId: String(rows[0].id) } : prev;
+        });
+      } catch (err) {
+        if (!alive) return;
+        setProjects([]);
+        setProjectsError(String(err?.message || "Could not load estates."));
+      } finally {
+        if (!alive) return;
+        setProjectsLoading(false);
+      }
+    })();
+
+    return () => {
+      alive = false;
+    };
+  }, []);
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    setIsSubmitting(true);
+    setSubmitError("");
+
+    try {
+      if (!formData.fullName.trim()) throw new Error("Full name is required.");
+      if (!formData.phone.trim()) throw new Error("Phone number is required.");
+      if (!formData.email.trim()) throw new Error("Email address is required.");
+      if (!formData.projectId) throw new Error("Estate / location is required.");
+      if (!formData.visitDate) throw new Error("Preferred date is required.");
+      if (!formData.visitTime) throw new Error("Preferred time is required.");
+
+      const scheduledAt = buildScheduledAt(formData.visitDate, formData.visitTime);
+      if (!scheduledAt) throw new Error("Preferred date & time is required.");
+
+      // Specialized public appointments endpoint
+      const url = new URL("/api/website/create_appointment.php", ADMIN_ORIGIN);
+
+      const fd = new FormData();
+      fd.append("full_name", formData.fullName.trim());
+      fd.append("email", formData.email.trim());
+      fd.append("phone", formData.phone.trim());
+      fd.append("interest", "inspection"); // Hardcoded interest for visits
+      fd.append("budget_range", "");
+
+      // Merge city, guests, and prep-notes into the message block
+      const messageParts = [
+        `City for inspection: ${formData.city}`,
+        `Number of guests: ${formData.guests}`,
+        formData.notes ? `Staff Prep Notes: ${formData.notes}` : null,
+      ].filter(Boolean);
+
+      fd.append("message", messageParts.join("\n"));
+      fd.append("project_id", formData.projectId);
+      fd.append("scheduled_at", scheduledAt);
+      fd.append("source", "website");
+
+      const res = await fetch(url.toString(), {
+        method: "POST",
+        body: fd,
+        headers: { Accept: "application/json" },
+      });
+
+      const data = await readJsonSafe(res);
+      if (!res.ok || !data?.ok) throw new Error(data?.message || "Could not submit appointment request.");
+
+      setShowConfirm(true);
+
+      // Reset form (keeping select project for nice UX)
+      setFormData((prev) => ({
+        fullName: "",
+        email: "",
+        phone: "",
+        city: "Abuja",
+        projectId: prev.projectId || "",
+        visitDate: "",
+        visitTime: "",
+        guests: "1",
+        notes: "",
+      }));
+    } catch (err) {
+      setSubmitError(String(err?.message || "Something went wrong."));
+    } finally {
+      setIsSubmitting(false);
+    }
+  };
+
   return (
-    <motion.div
-      className="schedule-page"
-      initial={{ opacity: 0 }}
-      animate={{ opacity: 1 }}
-      exit={{ opacity: 0 }}
-    >
+    <motion.div className="schedule-page" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}>
+      <SEO
+        title="Book a Property Inspection | Legit Empire"
+        description="Schedule a private, guided tour of our estates and residences. Coordinated securely by a Legit Empire representative in Abuja, Lagos, or Kaduna."
+        keywords="book property tour nigeria, schedule site inspection abuja, legit empire guided visit"
+      />
       {/* HERO */}
       <section className="schedule-hero">
         <motion.div
@@ -70,9 +199,7 @@ const Schedule = () => {
           <span className="schedule-pill">Book a visit</span>
           <h1>Schedule a private tour with Legit Empire.</h1>
           <p>
-            Share a few details about your visit and our team will confirm your
-            appointment, send directions, and prepare the right information
-            ahead of time.
+            Share a few details about your visit and our team will confirm your appointment, send directions, and prepare the right information ahead of time.
           </p>
           <div className="schedule-meta-row">
             <div>
@@ -116,8 +243,7 @@ const Schedule = () => {
             </li>
           </ul>
           <p className="hero-footnote">
-            After you submit the form, a member of the team will call or email
-            to confirm your time slot.
+            After you submit the form, a member of the team will call or email to confirm your time slot.
           </p>
         </motion.div>
       </section>
@@ -174,57 +300,55 @@ const Schedule = () => {
             <div className="form-row-3">
               <div className="form-group">
                 <label>City for inspection</label>
-                <select
-                  name="city"
-                  value={formData.city}
-                  onChange={handleChange}
-                >
+                <select name="city" value={formData.city} onChange={handleChange}>
                   <option value="Abuja">Abuja</option>
                   <option value="Lagos">Lagos</option>
                   <option value="Kaduna">Kaduna</option>
                   <option value="Other">Other (specify in notes)</option>
                 </select>
               </div>
+
               <div className="form-group">
                 <label>Preferred date</label>
-                <input
-                  type="date"
-                  name="visitDate"
-                  required
-                  value={formData.visitDate}
-                  onChange={handleChange}
-                />
+                <input type="date" name="visitDate" required value={formData.visitDate} onChange={handleChange} />
               </div>
+
               <div className="form-group">
                 <label>Preferred time</label>
-                <input
-                  type="time"
-                  name="visitTime"
-                  required
-                  value={formData.visitTime}
-                  onChange={handleChange}
-                />
+                <input type="time" name="visitTime" required value={formData.visitTime} onChange={handleChange} />
               </div>
             </div>
 
             <div className="form-row-2">
               <div className="form-group">
-                <label>Estate or project (optional)</label>
-                <input
-                  type="text"
-                  name="preferredEstate"
-                  placeholder="E.g. Emerald Court, Phase 2"
-                  value={formData.preferredEstate}
+                <label>Estate / location</label>
+                <select
+                  name="projectId"
+                  value={formData.projectId}
                   onChange={handleChange}
-                />
+                  disabled={projectsLoading}
+                  required
+                >
+                  <option value="">
+                    {projectsLoading ? "Loading estates…" : "Select an estate/location"}
+                  </option>
+                  {projectOptions.map((p) => (
+                    <option key={p.id} value={p.id}>
+                      {p.label}
+                    </option>
+                  ))}
+                </select>
+
+                {projectsError ? (
+                  <p className="schedule-disclaimer" style={{ color: "#b42318", marginTop: 8 }}>
+                    Could not load estates: {projectsError}
+                  </p>
+                ) : null}
               </div>
+
               <div className="form-group">
                 <label>Number of guests</label>
-                <select
-                  name="guests"
-                  value={formData.guests}
-                  onChange={handleChange}
-                >
+                <select name="guests" value={formData.guests} onChange={handleChange}>
                   <option value="1">Just me</option>
                   <option value="2">2 people</option>
                   <option value="3">3 people</option>
@@ -244,33 +368,35 @@ const Schedule = () => {
               ></textarea>
             </div>
 
+            {submitError ? (
+              <p className="schedule-disclaimer" style={{ color: "#b42318" }}>
+                {submitError}
+              </p>
+            ) : null}
+
             <button
               type="submit"
               className="schedule-submit-btn"
-              disabled={isSubmitting}
+              disabled={isSubmitting || projectsLoading || !!projectsError}
             >
               {isSubmitting ? "Submitting..." : "Request appointment"}
             </button>
 
             <p className="schedule-disclaimer">
-              Legit Empire will only use your details to coordinate this visit
-              and relevant project updates. You can opt out at any time.
+              Legit Empire will only use your details to coordinate this visit and relevant project updates. You can opt out at any time.
             </p>
           </motion.form>
 
           {/* SIDE INFO */}
           <motion.aside
             className="schedule-side"
-            initial={{ y: 30, opacity: 0 }}
-            whileInView={{ y: 0, opacity: 1 }}
-            viewport={{ margin: "-100px" }}
-            transition={{ duration: 0.6, ease: "easeOut", delay: 0.05 }}
+            initial={fadeUp.initial}
+            whileInView={fadeUp.whileInView}
+            viewport={fadeUp.viewport}
+            transition={fadeUp.transition}
           >
             <h3>Your visit, handled safely.</h3>
-            <p>
-              Our team follows a clear on‑site protocol so your inspection is
-              smooth, safe, and productive.
-            </p>
+            <p>Our team follows a clear on‑site protocol so your inspection is smooth, safe, and productive.</p>
 
             <ul className="side-list">
               <li>
@@ -278,8 +404,7 @@ const Schedule = () => {
                 <div>
                   <strong>Verified staff only.</strong>
                   <p>
-                    You will meet with a Legit Empire representative whose
-                    details are shared with you ahead of time.
+                    You will meet with a Legit Empire representative whose details are shared with you ahead of time.
                   </p>
                 </div>
               </li>
@@ -287,20 +412,14 @@ const Schedule = () => {
                 <span className="side-dot" />
                 <div>
                   <strong>Secure access control.</strong>
-                  <p>
-                    Gated entrances, visitor logs, and coordinated entry with
-                    estate security teams.
-                  </p>
+                  <p>Gated entrances, visitor logs, and coordinated entry with estate security teams.</p>
                 </div>
               </li>
               <li>
                 <span className="side-dot" />
                 <div>
                   <strong>Prepared documentation pack.</strong>
-                  <p>
-                    Where applicable, we provide layouts, payment plans and
-                    title status during or immediately after the visit.
-                  </p>
+                  <p>Where applicable, we provide layouts, payment plans and title status during or immediately after the visit.</p>
                 </div>
               </li>
             </ul>
@@ -335,9 +454,7 @@ const Schedule = () => {
             </div>
             <h2>Appointment request received</h2>
             <p>
-              Thank you for scheduling a visit with Legit Empire. Our team will
-              review your preferred time and get back to you to confirm the
-              exact slot.
+              Thank you for scheduling a visit with Legit Empire. Our team will review your preferred time and get back to you to confirm the exact slot.
             </p>
             <button className="confirm-btn" onClick={closeConfirm}>
               Back to schedule

@@ -1,0 +1,315 @@
+/* src/pages/Teams.css */
+
+.teams-roster-page {
+  background: var(--paper);
+  color: var(--ink);
+  padding-bottom: 88px;
+}
+
+/* ============================================================
+   TEAMS HERO
+   ============================================================ */
+.teams-roster-hero {
+  padding: 88px 6vw 56px;
+  max-width: 1280px;
+  margin: 0 auto;
+  text-align: center;
+  border-bottom: 1px solid var(--line);
+}
+
+.teams-hero-inner {
+  max-width: 720px;
+  margin: 0 auto;
+}
+
+.teams-pill {
+  display: inline-block;
+  font-family: 'Space Grotesk', monospace;
+  font-size: 11px;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--clay);
+  border: 1px solid var(--line);
+  padding: 6px 14px;
+  border-radius: 999px;
+  margin-bottom: 18px;
+}
+
+.teams-roster-hero h1 {
+  font-family: 'Fraunces', serif;
+  font-size: clamp(32px, 4.2vw, 50px);
+  line-height: 1.12;
+  margin: 0 0 16px;
+  color: var(--ink);
+}
+
+.teams-roster-hero p {
+  font-size: 16px;
+  line-height: 1.65;
+  color: var(--ink-70);
+  margin: 0;
+}
+
+/* ============================================================
+   TEAMS ROSTER GRID SECTION
+   ============================================================ */
+.teams-roster-section {
+  padding: 56px 6vw 88px;
+  max-width: 1280px;
+  margin: 0 auto;
+}
+
+/* Loading & Empty States */
+.teams-loading-spinner {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 80px 20px;
+  color: var(--ink-60);
+  gap: 16px;
+}
+
+.spinner-ring {
+  width: 44px;
+  height: 44px;
+  border: 3px solid var(--line);
+  border-top-color: var(--brass);
+  border-radius: 50%;
+  animation: teamSpin 0.8s linear infinite;
+}
+
+@keyframes teamSpin {
+  to { transform: rotate(360deg); }
+}
+
+.teams-empty-state {
+  text-align: center;
+  max-width: 440px;
+  margin: 80px auto;
+  border: 1px solid var(--line);
+  padding: 44px 36px;
+  border-radius: var(--radius-lg);
+  background: var(--paper-dim);
+}
+
+.empty-state-icon {
+  color: var(--clay);
+  margin-bottom: 18px;
+}
+
+.teams-empty-state h3 {
+  font-size: 19px;
+  margin: 0 0 8px;
+  color: var(--ink);
+}
+
+.teams-empty-state p {
+  font-size: 13.5px;
+  line-height: 1.6;
+  color: var(--ink-70);
+  margin: 0 0 24px;
+}
+
+.btn-back-home {
+  font-family: 'Space Grotesk', monospace;
+  font-size: 11.5px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  background: var(--ink);
+  color: var(--paper);
+  border: none;
+  padding: 10px 22px;
+  border-radius: 999px;
+  text-decoration: none;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  transition: all 0.2s ease;
+}
+
+.btn-back-home:hover {
+  background: var(--clay);
+}
+
+/* Roster Roster Card Grid */
+.roster-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 32px;
+}
+
+.roster-card {
+  background: var(--paper);
+  border: 1px solid var(--line);
+  border-radius: var(--radius-lg);
+  overflow: hidden;
+  box-shadow: 0 4px 15px rgba(27,20,13,0.01);
+  display: flex;
+  flex-direction: column;
+  transition: all 0.3s var(--ease) !important;
+}
+
+.roster-card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 20px 40px rgba(27,20,13,0.06);
+  border-color: var(--brass-light);
+}
+
+/* Featured CEO/MD card layout highlight */
+.roster-card.executive-featured {
+  border-color: var(--brass);
+  background: var(--paper-dim);
+}
+
+.roster-photo-frame {
+  position: relative;
+  width: 100%;
+  height: 280px;
+  background: #EAE3D5;
+  overflow: hidden;
+  border-bottom: 1px solid var(--line);
+}
+
+.roster-photo-frame img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: transform 0.5s ease;
+}
+
+.roster-card:hover .roster-photo-frame img {
+  transform: scale(1.03);
+}
+
+.roster-photo-placeholder {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  background: linear-gradient(135deg, var(--paper-dim) 0%, var(--line) 100%);
+  color: var(--ink-50);
+}
+
+.roster-placeholder-initials {
+  font-family: 'Space Grotesk', monospace;
+  font-size: 38px;
+  font-weight: 700;
+  letter-spacing: 0.05em;
+  color: var(--clay);
+  opacity: 0.7;
+}
+
+.roster-placeholder-label {
+  font-size: 10px;
+  font-family: 'Space Grotesk', monospace;
+  text-transform: uppercase;
+  margin-top: 8px;
+  letter-spacing: 0.1em;
+}
+
+.roster-overlay-badge {
+  position: absolute;
+  top: 14px;
+  left: 14px;
+  z-index: 2;
+}
+
+.featured-badge {
+  background: var(--paper);
+  color: var(--ink);
+  font-family: 'Space Grotesk', monospace;
+  font-size: 9.5px;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  padding: 5px 10px;
+  border-radius: 999px;
+  border: 1px solid var(--line);
+  display: flex;
+  align-items: center;
+  gap: 5px;
+}
+
+.featured-badge svg {
+  color: var(--brass);
+}
+
+.roster-card-info {
+  padding: 24px;
+  flex-grow: 1;
+  display: flex;
+  flex-direction: column;
+}
+
+.roster-meta-row {
+  border-bottom: 1px solid var(--line);
+  padding-bottom: 12px;
+  margin-bottom: 12px;
+}
+
+.roster-meta-row h3 {
+  font-size: 17.5px;
+  color: var(--ink);
+  margin-bottom: 3px;
+}
+
+.roster-role {
+  font-family: 'Space Grotesk', monospace;
+  font-size: 11px;
+  text-transform: uppercase;
+  color: var(--clay);
+  letter-spacing: 0.05em;
+  margin: 0;
+  font-weight: 600;
+}
+
+.roster-bio {
+  font-size: 13px;
+  line-height: 1.6;
+  color: var(--ink-70);
+  margin: 0 0 20px;
+  flex-grow: 1;
+}
+
+.roster-card-footer {
+  border-top: 1px dashed var(--line);
+  padding-top: 16px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.roster-location {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 11.5px;
+  color: var(--ink-50);
+}
+
+.roster-socials-group {
+  display: flex;
+  gap: 12px;
+}
+
+.roster-socials-group a {
+  color: var(--ink-50);
+  transition: color 0.2s ease, transform 0.2s ease;
+}
+
+.roster-socials-group a:hover {
+  color: var(--clay);
+  transform: translateY(-2px);
+}
+
+@media (max-width: 900px) {
+  .roster-grid { grid-template-columns: repeat(2, 1fr); gap: 24px; }
+}
+
+@media (max-width: 600px) {
+  .roster-grid { grid-template-columns: 1fr; }
+}

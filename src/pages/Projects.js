@@ -1,84 +1,145 @@
-import React, { useState } from "react";
+import React, { useEffect, useMemo, useState } from "react";
 import "./Projects.css";
+import SEO from "../components/SEO";
 
-// IMPORT LOCAL IMAGES FOR APO ABUJA
-import FrontSidedView from "../projects/APO ABUJA/front sided view.JPG";
-import FrontView from "../projects/APO ABUJA/FRONT VIEW.JPG";
-import LeftView from "../projects/APO ABUJA/LEFT VIEW.JPG";
-import SideView from "../projects/APO ABUJA/SIDE VIEW.JPG";
-import Swimming from "../projects/APO ABUJA/Swimming.JPG";
-import SiteLayout from "../projects/APO ABUJA/Site layout.jpeg";
+const ADMIN_ORIGIN = "https://admin.legitempirerealestate.com";
 
-const projects = [
-  {
-    id: 1,
-    name: "Apo Abuja Estate",
-    location: "Apo, Abuja",
-    status: "Ongoing",
-    type: "Residential Estate",
-    coverImage: FrontView,
-    units: "Fully detached, semi-detached & terraces",
-    size: "Site development layout",
-    description:
-      "Premium gated residential community in Apo Abuja with fully detached, semi-detached and terrace units, mosque, recreational area and ample green spaces.",
-    layouts: [
-      { id: "layout", label: "Site development layout", image: SiteLayout },
-      { id: "front", label: "Front view", image: FrontView },
-      { id: "frontSide", label: "Front sided view", image: FrontSidedView },
-      { id: "left", label: "Left view", image: LeftView },
-      { id: "side", label: "Side view", image: SideView },
-      { id: "pool", label: "Swimming / recreational", image: Swimming },
-    ],
-  },
-];
-
+// Map your existing filter chips to API filters
 const filterOptions = ["All", "Ongoing", "Completed", "Residential", "Commercial"];
+
+function typeFromChip(chip) {
+  if (chip === "Residential") return "Residential Estate";
+  if (chip === "Commercial") return "Commercial";
+  return "";
+}
 
 const Projects = () => {
   const [activeFilter, setActiveFilter] = useState("All");
-  const [activeProjectId, setActiveProjectId] = useState(projects[0]?.id || null);
+
+  const [projects, setProjects] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState("");
+
+  const [activeProjectId, setActiveProjectId] = useState(null);
   const [activeImageIndex, setActiveImageIndex] = useState(0);
 
-  const filteredProjects =
-    activeFilter === "All"
-      ? projects
-      : projects.filter((p) => {
-          if (activeFilter === "Ongoing" || activeFilter === "Completed") {
-            return p.status === activeFilter;
-          }
-          return p.type.toLowerCase().includes(activeFilter.toLowerCase());
+  const filteredProjects = useMemo(() => {
+    if (activeFilter === "All") return projects;
+
+    if (activeFilter === "Ongoing" || activeFilter === "Completed") {
+      return projects.filter((p) => p.status === activeFilter);
+    }
+
+    // Residential/Commercial chip -> match by type text
+    const t = activeFilter.toLowerCase();
+    return projects.filter((p) => String(p.type || "").toLowerCase().includes(t));
+  }, [projects, activeFilter]);
+
+  const activeProject = useMemo(() => {
+    const found = filteredProjects.find((p) => p.id === activeProjectId);
+    return found || filteredProjects[0] || null;
+  }, [filteredProjects, activeProjectId]);
+
+  const activeImage = useMemo(() => {
+    if (!activeProject) return null;
+    const layouts = Array.isArray(activeProject.layouts) ? activeProject.layouts : [];
+
+    // if no layouts, show coverImage as a pseudo-layout
+    if (!layouts.length && activeProject.coverImage) {
+      return { id: "cover", label: "Cover", image: activeProject.coverImage };
+    }
+
+    return layouts[activeImageIndex] || layouts[0] || null;
+  }, [activeProject, activeImageIndex]);
+
+  async function readJsonSafe(res) {
+    const text = await res.text();
+    try {
+      return JSON.parse(text);
+    } catch {
+      throw new Error(`Server returned non-JSON (HTTP ${res.status}).`);
+    }
+  }
+
+  useEffect(() => {
+    let alive = true;
+
+    (async () => {
+      setLoading(true);
+      setError("");
+
+      try {
+        const url = new URL("/api/website/listprojects.php", ADMIN_ORIGIN);
+
+        // If you want API-side filtering instead of client filtering, uncomment:
+        // if (activeFilter === "Ongoing" || activeFilter === "Completed") url.searchParams.set("status", activeFilter);
+        // const t = typeFromChip(activeFilter); if (t) url.searchParams.set("type", t);
+
+        const res = await fetch(url.toString(), {
+          method: "GET",
+          headers: { Accept: "application/json" },
         });
 
-  const activeProject =
-    filteredProjects.find((p) => p.id === activeProjectId) ||
-    filteredProjects[0] ||
-    null;
+        const data = await readJsonSafe(res);
+        if (!res.ok || !data?.ok) throw new Error(data?.message || "Could not load projects.");
 
-  const activeImage =
-    activeProject && activeProject.layouts[activeImageIndex]
-      ? activeProject.layouts[activeImageIndex]
-      : null;
+        const rows = Array.isArray(data.projects) ? data.projects : [];
+        if (!alive) return;
+
+        setProjects(rows);
+
+        // set default active project
+        setActiveProjectId(rows[0]?.id ?? null);
+        setActiveImageIndex(0);
+      } catch (err) {
+        if (!alive) return;
+        setProjects([]);
+        setActiveProjectId(null);
+        setError(String(err?.message || "Could not load projects."));
+      } finally {
+        if (!alive) return;
+        setLoading(false);
+      }
+    })();
+
+    return () => {
+      alive = false;
+    };
+  }, []);
+
+  // Reset active image when project or filter changes
+  useEffect(() => {
+    setActiveImageIndex(0);
+    if (filteredProjects.length && !filteredProjects.find((p) => p.id === activeProjectId)) {
+      setActiveProjectId(filteredProjects[0].id);
+    }
+  }, [activeFilter, filteredProjects, activeProjectId]);
 
   return (
     <div className="le-projects-page">
+      <SEO
+        title="Luxury Residential Estates & Gated Communities | Legit Empire"
+        description="Explore Legit Empire's premium portfolio of residential estates, high-rise towers, and commercial properties. Secure high-yield property investment opportunities in Abuja and Lagos."
+        keywords="nigerian property developments, gated community lagos, buy house abuja, property investment nigeria, legit empire projects"
+      />
       {/* HERO */}
       <header className="le-projects-hero">
         <div>
           <p className="le-badge">Projects</p>
-          <h1>Apo Abuja estate development</h1>
+          <h1>Our real estate developments</h1>
           <p className="le-projects-sub">
-            View the full site development layout and 3D perspectives for Legit
-            Empire’s flagship Apo Abuja residential estate.
+            Explore our published projects, layouts and perspectives.
           </p>
         </div>
+
         <div className="le-projects-hero-meta">
           <div>
             <span className="le-meta-label">Current Project</span>
-            <span className="le-meta-value">Apo Abuja</span>
+            <span className="le-meta-value">{activeProject ? activeProject.name : "—"}</span>
           </div>
           <div>
             <span className="le-meta-label">Project Status</span>
-            <span className="le-meta-value">{projects[0].status}</span>
+            <span className="le-meta-value">{activeProject ? activeProject.status : "—"}</span>
           </div>
         </div>
       </header>
@@ -88,10 +149,7 @@ const Projects = () => {
         {filterOptions.map((opt) => (
           <button
             key={opt}
-            className={
-              "le-filter-chip" +
-              (activeFilter === opt ? " le-filter-chip-active" : "")
-            }
+            className={"le-filter-chip" + (activeFilter === opt ? " le-filter-chip-active" : "")}
             onClick={() => setActiveFilter(opt)}
           >
             {opt}
@@ -99,18 +157,19 @@ const Projects = () => {
         ))}
       </section>
 
-      {/* MAIN LAYOUT: GALLERY + INFO */}
-      {activeProject && (
+      {loading ? (
+        <p style={{ padding: "12px 0" }}>Loading projects…</p>
+      ) : error ? (
+        <p style={{ padding: "12px 0", color: "#b42318" }}>{error}</p>
+      ) : !activeProject ? (
+        <p style={{ padding: "12px 0" }}>No published projects available.</p>
+      ) : (
         <section className="le-projects-layout">
           {/* LEFT: MAIN IMAGE + THUMBNAILS */}
           <div className="le-projects-gallery">
             {activeImage && (
               <div className="le-projects-main-image">
-                <img
-                  src={activeImage.image}
-                  alt={activeImage.label}
-                  className="le-projects-main-img"
-                />
+                <img src={activeImage.image} alt={activeImage.label} className="le-projects-main-img" />
                 <div className="le-projects-main-caption">
                   <span>{activeImage.label}</span>
                 </div>
@@ -118,23 +177,17 @@ const Projects = () => {
             )}
 
             <div className="le-projects-thumbs">
-              {activeProject.layouts.map((layout, index) => (
-                <button
-                  key={layout.id}
-                  className={
-                    "le-project-thumb-btn" +
-                    (index === activeImageIndex ? " le-project-thumb-active" : "")
-                  }
-                  onClick={() => setActiveImageIndex(index)}
-                >
-                  <img
-                    src={layout.image}
-                    alt={layout.label}
-                    className="le-project-thumb-img"
-                  />
-                  <span>{layout.label}</span>
-                </button>
-              ))}
+              {(activeProject.layouts?.length ? activeProject.layouts : activeProject.coverImage ? [{ id: "cover", label: "Cover", image: activeProject.coverImage }] : [])
+                .map((layout, index) => (
+                  <button
+                    key={layout.id}
+                    className={"le-project-thumb-btn" + (index === activeImageIndex ? " le-project-thumb-active" : "")}
+                    onClick={() => setActiveImageIndex(index)}
+                  >
+                    <img src={layout.image} alt={layout.label} className="le-project-thumb-img" />
+                    <span>{layout.label}</span>
+                  </button>
+                ))}
             </div>
           </div>
 
@@ -161,10 +214,7 @@ const Projects = () => {
             </div>
 
             <div className="le-project-side-footer">
-              <p>
-                For full brochure, pricing and allocation details, please speak
-                with the Legit Empire sales team.
-              </p>
+              <p>For full brochure, pricing and allocation details, please speak with the Legit Empire sales team.</p>
               <a href="/schedule" className="le-projects-cta-btn">
                 Book site inspection
               </a>
