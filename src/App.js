@@ -208,19 +208,14 @@ function App() {
           <Link to="/contact" className={location.pathname === "/contact" ? "active" : ""} onClick={closeMenu}>
             Contact
           </Link>
-        </div>
-        
-        <div className="mobile-menu-trust">
-          <div className="trust-badge-header">
-            <ExternalLink size={12} />
-            <span>CAC SECURED & VERIFIED</span>
-          </div>
-          <div className="trust-badge-body">
-            Legit Empire is a legally registered corporate developer under federal law.
-          </div>
-          <div className="trust-badge-rc">
-            RC Registration: 8343179
-          </div>
+          <Link 
+            to="/schedule" 
+            className="btn btn-primary mobile-menu-btn" 
+            onClick={closeMenu} 
+            style={{ marginTop: "24px", justifyContent: "center" }}
+          >
+            Schedule Appointment
+          </Link>
         </div>
 
         <div className="mobile-menu-footer">
