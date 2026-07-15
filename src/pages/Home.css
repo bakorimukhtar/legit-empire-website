@@ -161,20 +161,27 @@
   position: relative;
   overflow: visible;
   border-radius: 0;
-  background: var(--paper-dim);
+  background: rgba(253, 251, 247, 0.85);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
   background-image: 
-    linear-gradient(rgba(192, 138, 62, 0.035) 1px, transparent 1px),
-    linear-gradient(90deg, rgba(192, 138, 62, 0.035) 1px, transparent 1px);
-  background-size: 10px 10px;
+    linear-gradient(rgba(192, 138, 62, 0.04) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(192, 138, 62, 0.04) 1px, transparent 1px);
+  background-size: 12px 12px;
+  background-position: 0 0;
   border: 1px solid rgba(192, 138, 62, 0.35);
   box-shadow: 
-    0 10px 30px rgba(27, 20, 13, 0.04),
-    inset 0 0 0 1px rgba(255, 255, 255, 0.8);
+    0 12px 40px rgba(27, 20, 13, 0.05),
+    inset 0 0 0 1px rgba(255, 255, 255, 0.7);
   opacity: 0;
-  transform: translateY(18px);
-  animation: fade-up 0.7s var(--ease) forwards;
+  transform: translateY(24px);
+  animation: fade-up 0.85s cubic-bezier(0.16, 1, 0.3, 1) forwards;
   animation-delay: 1.45s;
-  transition: transform 0.3s var(--ease), border-color 0.3s var(--ease), box-shadow 0.3s var(--ease);
+  transition: 
+    transform 0.5s cubic-bezier(0.16, 1, 0.3, 1), 
+    border-color 0.5s cubic-bezier(0.16, 1, 0.3, 1), 
+    box-shadow 0.5s cubic-bezier(0.16, 1, 0.3, 1),
+    background-position 0.8s cubic-bezier(0.16, 1, 0.3, 1);
   padding: 4px;
   width: 100%;
   margin-top: 0;
@@ -185,30 +192,46 @@
   position: absolute;
   inset: 4px;
   border: 1px solid rgba(192, 138, 62, 0.12);
+  transition: inset 0.5s cubic-bezier(0.16, 1, 0.3, 1), border-color 0.5s cubic-bezier(0.16, 1, 0.3, 1);
   pointer-events: none;
 }
 
 .hero-meta-plate.spec-plate:hover {
-  transform: translateY(-2px);
+  transform: translateY(-4px);
   border-color: var(--brass);
   box-shadow: 
-    0 16px 36px rgba(27, 20, 13, 0.08),
+    0 24px 48px rgba(27, 20, 13, 0.1),
     inset 0 0 0 1px rgba(255, 255, 255, 0.9);
+  background-position: 6px 6px;
+}
+
+.hero-meta-plate.spec-plate:hover::before {
+  inset: 6px;
+  border-color: rgba(192, 138, 62, 0.25);
 }
 
 /* Corner Brackets */
 .corner-bracket {
   position: absolute;
-  width: 8px;
-  height: 8px;
-  border: 1.5px solid var(--brass);
+  width: 10px;
+  height: 10px;
+  border: 2px solid var(--brass);
   pointer-events: none;
   z-index: 2;
+  transition: transform 0.5s cubic-bezier(0.16, 1, 0.3, 1), border-color 0.5s cubic-bezier(0.16, 1, 0.3, 1);
 }
-.corner-bracket.tl { top: -2px; left: -2px; border-right: none; border-bottom: none; }
-.corner-bracket.tr { top: -2px; right: -2px; border-left: none; border-bottom: none; }
-.corner-bracket.bl { bottom: -2px; left: -2px; border-right: none; border-top: none; }
-.corner-bracket.br { bottom: -2px; right: -2px; border-left: none; border-top: none; }
+.corner-bracket.tl { top: -3px; left: -3px; border-right: none; border-bottom: none; }
+.corner-bracket.tr { top: -3px; right: -3px; border-left: none; border-bottom: none; }
+.corner-bracket.bl { bottom: -3px; left: -3px; border-right: none; border-top: none; }
+.corner-bracket.br { bottom: -3px; right: -3px; border-left: none; border-top: none; }
+
+.hero-meta-plate.spec-plate:hover .corner-bracket {
+  border-color: var(--brass-light);
+}
+.hero-meta-plate.spec-plate:hover .corner-bracket.tl { transform: translate(-3px, -3px); }
+.hero-meta-plate.spec-plate:hover .corner-bracket.tr { transform: translate(3px, -3px); }
+.hero-meta-plate.spec-plate:hover .corner-bracket.bl { transform: translate(-3px, 3px); }
+.hero-meta-plate.spec-plate:hover .corner-bracket.br { transform: translate(3px, 3px); }
 
 /* Grid Layout */
 .plate-grid {
@@ -220,29 +243,40 @@
 }
 
 .plate-section {
-  padding: 24px 28px;
+  padding: 28px 32px;
   display: flex;
   flex-direction: column;
-  gap: 10px;
+  gap: 12px;
+  cursor: pointer;
 }
 
 .plate-header {
   display: flex;
   align-items: center;
-  gap: 8px;
+  gap: 10px;
   color: var(--brass);
+  transition: transform 0.4s var(--ease);
+}
+
+.plate-section:hover .plate-header {
+  transform: translateX(4px);
 }
 
 .plate-icon {
   flex-shrink: 0;
   opacity: 0.85;
+  transition: transform 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+}
+
+.plate-section:hover .plate-icon {
+  transform: scale(1.15) rotate(-8deg);
 }
 
 .plate-label {
   display: block;
   font-family: 'Space Grotesk', monospace;
-  font-size: 9px;
-  letter-spacing: 0.12em;
+  font-size: 10px;
+  letter-spacing: 0.14em;
   text-transform: uppercase;
   color: var(--clay);
   font-weight: 600;
@@ -251,17 +285,29 @@
 .plate-value {
   font-family: 'Fraunces', serif;
   font-weight: 500;
-  font-size: 15px;
+  font-size: 16px;
   color: var(--ink);
   line-height: 1.35;
   margin: 0;
+  transition: color 0.4s var(--ease), transform 0.4s var(--ease);
+}
+
+.plate-section:hover .plate-value {
+  color: var(--clay);
+  transform: translateX(4px);
 }
 
 .plate-summary {
-  font-size: 12.5px;
-  line-height: 1.5;
+  font-size: 13px;
+  line-height: 1.6;
   color: var(--ink-70);
   margin: 0;
+  transition: color 0.4s var(--ease), transform 0.4s var(--ease);
+}
+
+.plate-section:hover .plate-summary {
+  color: var(--ink);
+  transform: translateX(4px);
 }
 
 /* Vertical divider */
@@ -269,7 +315,12 @@
   width: 1px;
   background: rgba(192, 138, 62, 0.2);
   align-self: stretch;
-  margin: 12px 0;
+  margin: 16px 0;
+  transition: background 0.4s var(--ease);
+}
+
+.hero-meta-plate.spec-plate:hover .plate-divider {
+  background: rgba(192, 138, 62, 0.4);
 }
 
 @media (max-width: 640px) {
