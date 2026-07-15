@@ -39,6 +39,9 @@
 .blueprint-figure rect {
   stroke: var(--clay);
   fill: none;
+  stroke-dasharray: 1000;
+  stroke-dashoffset: 1000;
+  animation: draw-careers-blueprint 2s cubic-bezier(0.65, 0, 0.35, 1) forwards;
 }
 
 .blueprint-figure rect {
@@ -47,15 +50,21 @@
 
 .blueprint-grid line {
   stroke-width: 1;
+  animation-delay: 2.4s;
+  animation-duration: 1.2s;
 }
 
 .blueprint-structure rect,
 .blueprint-structure line {
   stroke-width: 1.2;
+  animation-delay: 2.7s;
+  animation-duration: 1.5s;
 }
 
 .blueprint-ground {
   stroke-width: 1.4;
+  animation-delay: 2.5s;
+  animation-duration: 1.0s;
 }
 
 .blueprint-figure circle,
@@ -66,8 +75,30 @@
   stroke-linejoin: round;
 }
 
+/* Figure body components */
+.blueprint-figure > circle,
+.blueprint-figure > path,
+.blueprint-figure > line {
+  animation-delay: 3.1s;
+  animation-duration: 1.8s;
+}
+
+/* Briefcase parts */
 .blueprint-figure g rect {
   stroke-width: 1.4;
+  animation-delay: 3.4s;
+  animation-duration: 1.2s;
+}
+.blueprint-figure g path,
+.blueprint-figure g line {
+  animation-delay: 3.4s;
+  animation-duration: 1.2s;
+}
+
+@keyframes draw-careers-blueprint {
+  to {
+    stroke-dashoffset: 0;
+  }
 }
 
 .careers-hero-content {
