@@ -268,39 +268,35 @@ function Home() {
                 Explore Projects
               </Link>
             </div>
-            <div className="hero-meta-cards">
-              <div className="meta-card spec-plate meta-card-1">
-                <span className="corner-bracket tl"></span>
-                <span className="corner-bracket tr"></span>
-                <span className="corner-bracket bl"></span>
-                <span className="corner-bracket br"></span>
-                <div className="spec-stamp">APPROVED</div>
-                <div className="meta-card-inner">
-                  <div className="meta-card-icon">
-                    <Building size={20} />
+            <div className="hero-meta-plate spec-plate">
+              <span className="corner-bracket tl"></span>
+              <span className="corner-bracket tr"></span>
+              <span className="corner-bracket bl"></span>
+              <span className="corner-bracket br"></span>
+
+              <div className="plate-grid">
+                <div className="plate-section">
+                  <div className="plate-header">
+                    <Building size={16} className="plate-icon" />
+                    <span className="plate-label">Project Focus</span>
                   </div>
-                  <div className="meta-divider"></div>
-                  <div className="meta-card-content">
-                    <span className="meta-label">Project focus</span>
-                    <span className="meta-value">Residential · Commercial · Mixed-use</span>
-                  </div>
+                  <h3 className="plate-value">Residential · Commercial · Mixed-use</h3>
+                  <p className="plate-summary">
+                    Engineering luxury masterplanned estates, commercial hubs, and off-plan assets built for maximum yield.
+                  </p>
                 </div>
-              </div>
-              <div className="meta-card spec-plate meta-card-2">
-                <span className="corner-bracket tl"></span>
-                <span className="corner-bracket tr"></span>
-                <span className="corner-bracket bl"></span>
-                <span className="corner-bracket br"></span>
-                <div className="spec-stamp">VERIFIED</div>
-                <div className="meta-card-inner">
-                  <div className="meta-card-icon">
-                    <Users size={20} />
+
+                <div className="plate-divider"></div>
+
+                <div className="plate-section">
+                  <div className="plate-header">
+                    <Users size={16} className="plate-icon" />
+                    <span className="plate-label">Buyers Served</span>
                   </div>
-                  <div className="meta-divider"></div>
-                  <div className="meta-card-content">
-                    <span className="meta-label">Buyers served</span>
-                    <span className="meta-value">Investors & Families</span>
-                  </div>
+                  <h3 className="plate-value">Investors & Families</h3>
+                  <p className="plate-summary">
+                    Securing property wealth for institutional funds, diasporan buyers, and Nigerian families seeking security.
+                  </p>
                 </div>
               </div>
             </div>
