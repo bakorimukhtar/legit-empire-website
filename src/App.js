@@ -208,14 +208,6 @@ function App() {
           <Link to="/contact" className={location.pathname === "/contact" ? "active" : ""} onClick={closeMenu}>
             Contact
           </Link>
-          <Link 
-            to="/schedule" 
-            className="btn btn-primary mobile-menu-btn" 
-            onClick={closeMenu} 
-            style={{ marginTop: "24px", justifyContent: "center" }}
-          >
-            Schedule Appointment
-          </Link>
         </div>
 
         <div className="mobile-menu-footer">
