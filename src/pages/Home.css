@@ -9,6 +9,7 @@
   overflow: hidden;
 }
 
+/* --- Blueprint skyline: draws itself in on load, staggered per shape --- */
 .skyline-bg {
   position: absolute;
   right: -4%;
@@ -20,13 +21,26 @@
   z-index: 0;
 }
 
-.skyline-bg path, 
-.skyline-bg polyline, 
-.skyline-bg rect {
+.skyline-bg polyline,
+.skyline-bg rect,
+.skyline-bg line {
   fill: none;
   stroke: var(--clay);
   stroke-width: 1.4;
-  opacity: 0.28;
+  stroke-dasharray: 1400;
+  stroke-dashoffset: 1400;
+  animation: draw-blueprint 1.7s cubic-bezier(0.65, 0, 0.35, 1) forwards;
+}
+
+.skyline-bg > *:nth-child(1) { animation-delay: 2.4s; }
+.skyline-bg > *:nth-child(2) { animation-delay: 2.52s; }
+.skyline-bg > *:nth-child(3) { animation-delay: 2.62s; }
+.skyline-bg > *:nth-child(4) { animation-delay: 2.72s; }
+.skyline-bg > *:nth-child(5) { animation-delay: 2.82s; }
+.skyline-bg > *:nth-child(6) { animation-delay: 2.9s; }
+
+@keyframes draw-blueprint {
+  to { stroke-dashoffset: 0; opacity: 0.28; }
 }
 
 .hero-grid {
@@ -50,6 +64,22 @@
   margin-bottom: 14px;
 }
 
+/* --- Dimension tick line: opens the sequence (signature motif) --- */
+.hero-tickline {
+  display: block;
+  width: 0;
+  height: 1px;
+  margin: 0 0 22px;
+  background: var(--clay);
+  opacity: 0.35;
+  animation: grow-line 0.8s cubic-bezier(0.65, 0, 0.35, 1) 0.15s forwards;
+}
+
+@keyframes grow-line {
+  to { width: 72px; }
+}
+
+/* --- Headline: two lines, each revealed with a masked wipe --- */
 .hero-title {
   font-size: clamp(32px, 4.6vw, 56px);
   line-height: 1.15;
@@ -57,25 +87,45 @@
   margin-bottom: 20px;
 }
 
+.hero-line {
+  display: block;
+  overflow: hidden;
+}
+
+.hero-line-inner {
+  display: block;
+  clip-path: inset(0 100% 0 0);
+  animation: wipe-in 0.85s cubic-bezier(0.65, 0, 0.35, 1) forwards;
+}
+
+.hero-line-1 .hero-line-inner { animation-delay: 0.45s; }
+.hero-line-2 .hero-line-inner { animation-delay: 0.75s; }
+
+@keyframes wipe-in {
+  to { clip-path: inset(0 0 0 0); }
+}
+
+/* --- Rotating word: vertical roll reveal (replaces typewriter) --- */
 .hero-title .rot-wrap {
+  position: relative;
   display: inline-block;
+  overflow: hidden;
+  vertical-align: bottom;
+  height: 1.15em;
+  line-height: 1.15em;
   color: var(--clay);
   border-bottom: 2px solid var(--brass);
   padding-bottom: 2px;
-  position: relative;
-  white-space: nowrap;
 }
 
-.rot-cursor {
+.rot-word {
   display: inline-block;
-  width: 2px;
-  margin-left: 2px;
-  background: var(--brass);
-  animation: blink 1s step-end infinite;
+  animation: word-roll-in 0.55s cubic-bezier(0.22, 1, 0.36, 1) both;
 }
 
-@keyframes blink {
-  50% { opacity: 0; }
+@keyframes word-roll-in {
+  from { opacity: 0; transform: translateY(55%); }
+  to { opacity: 1; transform: translateY(0); }
 }
 
 .hero-sub {
@@ -93,66 +143,158 @@
   margin-bottom: 38px;
 }
 
+/* --- Fade-up entrance used by subhead + actions --- */
+.hero-fade-up {
+  opacity: 0;
+  transform: translateY(16px);
+  animation: fade-up 0.7s var(--ease) forwards;
+}
+
+.hero-sub.hero-fade-up { animation-delay: 1.05s; }
+.hero-actions.hero-fade-up { animation-delay: 1.25s; }
+
+@keyframes fade-up {
+  to { opacity: 1; transform: translateY(0); }
+}
+
 .hero-meta-cards {
   display: grid;
   grid-template-columns: 1fr 1fr;
-  gap: 20px;
-  margin-top: 38px;
+  gap: 24px;
+  margin-top: 48px;
   max-width: 680px;
   width: 100%;
 }
 
-.meta-card {
-  background: var(--ink-soft);
-  border: 1px solid rgba(228, 179, 104, 0.16);
-  border-radius: var(--radius-md);
-  padding: 20px 24px;
+/* --- Blueprint Spec Plate Layout --- */
+.meta-card.spec-plate {
+  position: relative;
+  overflow: visible;
+  border-radius: 0;
+  background: var(--paper-dim);
+  background-image: 
+    linear-gradient(rgba(192, 138, 62, 0.035) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(192, 138, 62, 0.035) 1px, transparent 1px);
+  background-size: 10px 10px;
+  border: 1px solid rgba(192, 138, 62, 0.35);
+  box-shadow: 
+    0 10px 30px rgba(27, 20, 13, 0.04),
+    inset 0 0 0 1px rgba(255, 255, 255, 0.8);
+  opacity: 0;
+  transform: translateY(18px);
+  animation: fade-up 0.7s var(--ease) forwards;
+  transition: transform 0.3s var(--ease), border-color 0.3s var(--ease), box-shadow 0.3s var(--ease);
+  padding: 4px;
+}
+
+.meta-card.spec-plate::before {
+  content: "";
+  position: absolute;
+  inset: 4px;
+  border: 1px solid rgba(192, 138, 62, 0.12);
+  pointer-events: none;
+}
+
+.meta-card.spec-plate:hover {
+  transform: translateY(-2px);
+  border-color: var(--brass);
+  box-shadow: 
+    0 16px 36px rgba(27, 20, 13, 0.08),
+    inset 0 0 0 1px rgba(255, 255, 255, 0.9);
+}
+
+.meta-card-1 { animation-delay: 1.45s; }
+.meta-card-2 { animation-delay: 1.58s; }
+
+/* Corner Brackets */
+.corner-bracket {
+  position: absolute;
+  width: 8px;
+  height: 8px;
+  border: 1.5px solid var(--brass);
+  pointer-events: none;
+  z-index: 2;
+}
+.corner-bracket.tl { top: -2px; left: -2px; border-right: none; border-bottom: none; }
+.corner-bracket.tr { top: -2px; right: -2px; border-left: none; border-bottom: none; }
+.corner-bracket.bl { bottom: -2px; left: -2px; border-right: none; border-top: none; }
+.corner-bracket.br { bottom: -2px; right: -2px; border-left: none; border-top: none; }
+
+/* Approved/Verified Rotated Stamp */
+.spec-stamp {
+  position: absolute;
+  top: 10px;
+  right: 14px;
+  font-family: 'Space Grotesk', monospace;
+  font-size: 8px;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  color: rgba(122, 59, 24, 0.32);
+  border: 1px dashed rgba(122, 59, 24, 0.35);
+  border-radius: 2px;
+  padding: 3px 6px;
+  transform: rotate(-10deg);
+  pointer-events: none;
+  z-index: 2;
+  user-select: none;
+  text-transform: uppercase;
+}
+
+/* Inner block */
+.meta-card-inner {
+  position: relative;
+  z-index: 1;
   display: flex;
   align-items: center;
   gap: 16px;
-  box-shadow: 0 10px 30px rgba(27, 20, 13, 0.06);
-  transition: transform 0.4s var(--ease), border-color 0.4s var(--ease), box-shadow 0.4s var(--ease);
+  padding: 16px 20px;
 }
 
-.meta-card:hover {
-  transform: translateY(-3px);
-  border-color: var(--brass);
-  box-shadow: 0 16px 36px rgba(27, 20, 13, 0.12);
+/* Divider line */
+.meta-divider {
+  width: 1px;
+  height: 28px;
+  background: rgba(192, 138, 62, 0.2);
+  flex-shrink: 0;
 }
 
+/* Icon */
 .meta-card-icon {
-  width: 46px;
-  height: 46px;
+  width: 38px;
+  height: 38px;
   border-radius: 50%;
-  background: rgba(192, 138, 62, 0.12);
-  color: var(--brass-light);
+  background: rgba(192, 138, 62, 0.08);
+  color: var(--brass);
   display: flex;
   align-items: center;
   justify-content: center;
   flex-shrink: 0;
-  box-shadow: 0 0 0 1px rgba(228, 179, 104, 0.15);
+  box-shadow: 0 0 0 1px rgba(192, 138, 62, 0.15);
 }
 
 .meta-card-content {
   display: flex;
   flex-direction: column;
+  gap: 3px;
+  min-width: 0;
 }
 
 .meta-label {
   display: block;
   font-family: 'Space Grotesk', monospace;
-  font-size: 10px;
+  font-size: 9px;
   letter-spacing: 0.12em;
   text-transform: uppercase;
-  color: var(--brass-light);
-  margin-bottom: 4px;
+  color: var(--clay);
+  font-weight: 600;
 }
 
 .meta-value {
+  font-family: 'Fraunces', serif;
   font-weight: 500;
-  font-size: 13.5px;
-  color: var(--paper);
-  line-height: 1.45;
+  font-size: 14.5px;
+  color: var(--ink);
+  line-height: 1.35;
 }
 
 @media (max-width: 640px) {
@@ -162,7 +304,7 @@
   }
 }
 
-/* Hero Media Plot Card */
+/* Hero Media Plot Card (legacy, unused in current markup — kept intact) */
 .hero-media {
   position: relative;
   z-index: 1;
@@ -260,9 +402,57 @@
 }
 
 @media (max-width: 960px) {
-  .hero-grid { grid-template-columns: 1fr; }
+  .hero-grid { grid-template-columns: 1fr; position: relative; z-index: 1; }
   .plot-card { margin: 0; max-width: 100%; }
-  .skyline-bg { display: none; }
+
+  /* Skyline becomes a full-bleed background layer, text sits above it */
+  .hero { padding-top: 60px; }
+
+  .skyline-bg {
+    display: block;
+    position: absolute;
+    inset: 0;
+    right: auto;
+    top: auto;
+    width: 100%;
+    height: 100%;
+    max-width: 100%;
+    opacity: 1;
+    z-index: 0;
+  }
+
+  .skyline-bg polyline,
+  .skyline-bg rect,
+  .skyline-bg line {
+    stroke-width: 1.1;
+  }
+}
+
+/* Shared blink keyframe — used by .test-cursor in the testimonials section */
+@keyframes blink {
+  50% { opacity: 0; }
+}
+
+/* --- Respect reduced motion: kill motion, keep content instantly visible --- */
+@media (prefers-reduced-motion: reduce) {
+  .skyline-bg polyline,
+  .skyline-bg rect,
+  .skyline-bg line,
+  .hero-tickline,
+  .hero-line-inner,
+  .rot-word,
+  .hero-fade-up,
+  .meta-card,
+  .meta-card::before,
+  .meta-card::after,
+  .meta-card-inner,
+  .meta-card-icon {
+    animation: none !important;
+    opacity: 1 !important;
+    transform: none !important;
+    clip-path: none !important;
+    stroke-dashoffset: 0 !important;
+  }
 }
 
 /* ============================================================

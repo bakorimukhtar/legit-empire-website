@@ -16,40 +16,19 @@ import {
 import { Link } from "react-router-dom";
 import "./Home.css";
 
-// Hook: Rotating multi-phrase typewriter
-const useTypewriterWords = (words, typeSpeed = 100, deleteSpeed = 60, pause = 1800) => {
-  const [wordIndex, setWordIndex] = useState(0);
-  const [display, setDisplay] = useState("");
-  const [isDeleting, setIsDeleting] = useState(false);
+// Hook: Rotating phrase index — used with a CSS "roll reveal" on mount,
+// no letter-by-letter typing. Cleaner, calmer, more deliberate.
+const useRotatingWord = (words, interval = 2800) => {
+  const [index, setIndex] = useState(0);
 
   useEffect(() => {
-    const currentWord = words[wordIndex];
-    let speed = isDeleting ? deleteSpeed : typeSpeed;
+    const timer = setInterval(() => {
+      setIndex((prev) => (prev + 1) % words.length);
+    }, interval);
+    return () => clearInterval(timer);
+  }, [words, interval]);
 
-    if (!isDeleting && display === currentWord) {
-      speed = pause;
-    }
-    if (isDeleting && display === "") {
-      speed = 400;
-    }
-
-    const timer = setTimeout(() => {
-      if (!isDeleting && display === currentWord) {
-        setIsDeleting(true);
-      } else if (isDeleting && display === "") {
-        setIsDeleting(false);
-        setWordIndex((prev) => (prev + 1) % words.length);
-      } else if (isDeleting) {
-        setDisplay((prev) => prev.slice(0, prev.length - 1));
-      } else {
-        setDisplay(currentWord.slice(0, display.length + 1));
-      }
-    }, speed);
-
-    return () => clearTimeout(timer);
-  }, [display, isDeleting, wordIndex, words, typeSpeed, deleteSpeed, pause]);
-
-  return display;
+  return index;
 };
 
 // Component: Stats Counter
@@ -161,7 +140,7 @@ function TestimonialCard({ quote, name, role, stars }) {
 
 function Home() {
   const phrases = ["Luxury Apartments", "Gated Communities", "Prime City Plots", "Mixed-Use Developments"];
-  const rotatingHeadline = useTypewriterWords(phrases);
+  const rotatingIndex = useRotatingWord(phrases);
 
   const [projectIndex, setProjectIndex] = useState(0);
   const [projects, setProjects] = useState([]);
@@ -242,29 +221,46 @@ function Home() {
       {/* HERO SECTION */}
       <section className="hero">
         {/* Architectural self-drawing blueprint skyline graphic */}
-        <svg className="skyline-bg" id="heroSkyline" viewBox="0 0 640 460" xmlns="http://www.w3.org/2000/svg" style={{ zIndex: 0 }}>
-          <polyline points="20,220 220,80 260,104 300,84 620,220" stroke="var(--clay)" strokeWidth="1.4" fill="none" opacity="0.28" />
-          <rect x="250" y="60" width="90" height="330" stroke="var(--clay)" strokeWidth="1.4" fill="none" opacity="0.28" />
-          <rect x="360" y="130" width="60" height="260" stroke="var(--clay)" strokeWidth="1.4" fill="none" opacity="0.28" />
-          <rect x="430" y="170" width="52" height="220" stroke="var(--clay)" strokeWidth="1.4" fill="none" opacity="0.28" />
-          <rect x="60" y="220" width="140" height="170" stroke="var(--clay)" strokeWidth="1.4" fill="none" opacity="0.28" />
-          <line x1="0" y1="390" x2="640" y2="390" stroke="var(--clay)" strokeWidth="1.4" fill="none" opacity="0.28" />
+        <svg
+          className="skyline-bg"
+          id="heroSkyline"
+          viewBox="0 0 640 460"
+          preserveAspectRatio="xMidYMid slice"
+          xmlns="http://www.w3.org/2000/svg"
+          style={{ zIndex: 0 }}
+        >
+          <polyline points="20,220 220,80 260,104 300,84 620,220" />
+          <rect x="250" y="60" width="90" height="330" />
+          <rect x="360" y="130" width="60" height="260" />
+          <rect x="430" y="170" width="52" height="220" />
+          <rect x="60" y="220" width="140" height="170" />
+          <line x1="0" y1="390" x2="640" y2="390" />
         </svg>
 
         <div className="wrap hero-grid">
-          <div className="hero-text reveal">
-            <div className="eyebrow" style={{ marginBottom: "16px" }}>
-              <Building size={14} style={{ marginRight: "4px" }} />
-              Trusted Nigerian Real Estate Developer
-            </div>
+          <div className="hero-text">
+            <span className="hero-tickline" aria-hidden="true" />
+
             <h1 className="hero-title">
-              Building <span className="rot-wrap"><span>{rotatingHeadline}</span><span className="rot-cursor">&nbsp;</span></span><br />
-              that stands the test of time.
+              <span className="hero-line hero-line-1">
+                <span className="hero-line-inner">
+                  Building{" "}
+                  <span className="rot-wrap">
+                    <span key={rotatingIndex} className="rot-word">
+                      {phrases[rotatingIndex]}
+                    </span>
+                  </span>
+                </span>
+              </span>
+              <span className="hero-line hero-line-2">
+                <span className="hero-line-inner">that stands the test of time.</span>
+              </span>
             </h1>
-            <p className="hero-sub" style={{ maxWidth: "100%" }}>
+
+            <p className="hero-sub hero-fade-up" style={{ maxWidth: "100%" }}>
               Legit Empire designs and delivers modern homes, estates and investment-grade properties for homeowners and investors across Nigeria.
             </p>
-            <div className="hero-actions">
+            <div className="hero-actions hero-fade-up">
               <Link to="/schedule" className="btn btn-primary">
                 Schedule a visit
               </Link>
@@ -273,22 +269,38 @@ function Home() {
               </Link>
             </div>
             <div className="hero-meta-cards">
-              <div className="meta-card">
-                <div className="meta-card-icon">
-                  <Building size={20} />
-                </div>
-                <div className="meta-card-content">
-                  <span className="meta-label">Project focus</span>
-                  <span className="meta-value">Residential · Commercial · Mixed-use</span>
+              <div className="meta-card spec-plate meta-card-1">
+                <span className="corner-bracket tl"></span>
+                <span className="corner-bracket tr"></span>
+                <span className="corner-bracket bl"></span>
+                <span className="corner-bracket br"></span>
+                <div className="spec-stamp">APPROVED</div>
+                <div className="meta-card-inner">
+                  <div className="meta-card-icon">
+                    <Building size={20} />
+                  </div>
+                  <div className="meta-divider"></div>
+                  <div className="meta-card-content">
+                    <span className="meta-label">Project focus</span>
+                    <span className="meta-value">Residential · Commercial · Mixed-use</span>
+                  </div>
                 </div>
               </div>
-              <div className="meta-card">
-                <div className="meta-card-icon">
-                  <Users size={20} />
-                </div>
-                <div className="meta-card-content">
-                  <span className="meta-label">Buyers served</span>
-                  <span className="meta-value">Investors & Families</span>
+              <div className="meta-card spec-plate meta-card-2">
+                <span className="corner-bracket tl"></span>
+                <span className="corner-bracket tr"></span>
+                <span className="corner-bracket bl"></span>
+                <span className="corner-bracket br"></span>
+                <div className="spec-stamp">VERIFIED</div>
+                <div className="meta-card-inner">
+                  <div className="meta-card-icon">
+                    <Users size={20} />
+                  </div>
+                  <div className="meta-divider"></div>
+                  <div className="meta-card-content">
+                    <span className="meta-label">Buyers served</span>
+                    <span className="meta-value">Investors & Families</span>
+                  </div>
                 </div>
               </div>
             </div>
