@@ -176,9 +176,8 @@
   animation-delay: 1.45s;
   transition: transform 0.3s var(--ease), border-color 0.3s var(--ease), box-shadow 0.3s var(--ease);
   padding: 4px;
-  max-width: 680px;
   width: 100%;
-  margin-top: 48px;
+  margin-top: 0;
 }
 
 .hero-meta-plate.spec-plate::before {

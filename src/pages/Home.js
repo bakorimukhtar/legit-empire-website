@@ -268,36 +268,39 @@ function Home() {
                 Explore Projects
               </Link>
             </div>
-            <div className="hero-meta-plate spec-plate">
-              <span className="corner-bracket tl"></span>
-              <span className="corner-bracket tr"></span>
-              <span className="corner-bracket bl"></span>
-              <span className="corner-bracket br"></span>
+          </div>
+        </div>
 
-              <div className="plate-grid">
-                <div className="plate-section">
-                  <div className="plate-header">
-                    <Building size={16} className="plate-icon" />
-                    <span className="plate-label">Project Focus</span>
-                  </div>
-                  <h3 className="plate-value">Residential · Commercial · Mixed-use</h3>
-                  <p className="plate-summary">
-                    Engineering luxury masterplanned estates, commercial hubs, and off-plan assets built for maximum yield.
-                  </p>
+        <div className="wrap reveal" style={{ marginTop: "40px" }}>
+          <div className="hero-meta-plate spec-plate">
+            <span className="corner-bracket tl"></span>
+            <span className="corner-bracket tr"></span>
+            <span className="corner-bracket bl"></span>
+            <span className="corner-bracket br"></span>
+
+            <div className="plate-grid">
+              <div className="plate-section">
+                <div className="plate-header">
+                  <Building size={16} className="plate-icon" />
+                  <span className="plate-label">Project Focus</span>
                 </div>
+                <h3 className="plate-value">Residential · Commercial · Mixed-use</h3>
+                <p className="plate-summary">
+                  Engineering luxury masterplanned estates, commercial hubs, and off-plan assets built for maximum yield.
+                </p>
+              </div>
 
-                <div className="plate-divider"></div>
+              <div className="plate-divider"></div>
 
-                <div className="plate-section">
-                  <div className="plate-header">
-                    <Users size={16} className="plate-icon" />
-                    <span className="plate-label">Buyers Served</span>
-                  </div>
-                  <h3 className="plate-value">Investors & Families</h3>
-                  <p className="plate-summary">
-                    Securing property wealth for institutional funds, diasporan buyers, and Nigerian families seeking security.
-                  </p>
+              <div className="plate-section">
+                <div className="plate-header">
+                  <Users size={16} className="plate-icon" />
+                  <span className="plate-label">Buyers Served</span>
                 </div>
+                <h3 className="plate-value">Investors & Families</h3>
+                <p className="plate-summary">
+                  Securing property wealth for institutional funds, diasporan buyers, and Nigerian families seeking security.
+                </p>
               </div>
             </div>
           </div>
