@@ -3,14 +3,14 @@
 .le-projects-page {
   background: var(--paper);
   color: var(--ink);
-  padding-bottom: 88px;
+  padding-bottom: 96px;
 }
 
 /* ============================================================
-   PROJECTS HERO
+   HERO
    ============================================================ */
 .le-projects-hero {
-  padding: 88px 6vw 44px;
+  padding: 88px 6vw 48px;
   max-width: 1280px;
   margin: 0 auto;
   display: flex;
@@ -21,6 +21,10 @@
   border-bottom: 1px solid var(--line);
 }
 
+.le-projects-hero-left {
+  max-width: 620px;
+}
+
 .le-badge {
   display: inline-block;
   font-family: 'Space Grotesk', monospace;
@@ -28,7 +32,8 @@
   letter-spacing: 0.12em;
   text-transform: uppercase;
   color: var(--clay);
-  border: 1px solid var(--line);
+  border: 1px solid rgba(192, 138, 62, 0.3);
+  background: rgba(192, 138, 62, 0.05);
   padding: 6px 14px;
   border-radius: 999px;
   margin-bottom: 16px;
@@ -36,51 +41,71 @@
 
 .le-projects-hero h1 {
   font-family: 'Fraunces', serif;
-  font-size: clamp(30px, 4vw, 48px);
+  font-size: clamp(32px, 4vw, 52px);
   line-height: 1.15;
-  margin: 0 0 10px;
+  margin: 0 0 14px;
   color: var(--ink);
 }
 
 .le-projects-sub {
-  font-size: 15px;
+  font-size: 16px;
+  line-height: 1.6;
   color: var(--ink-70);
   margin: 0;
 }
 
 .le-projects-hero-meta {
   display: flex;
-  gap: 32px;
+  gap: 36px;
+}
+
+.le-hero-meta-item {
+  display: flex;
+  flex-direction: column;
 }
 
 .le-meta-label {
-  display: block;
   font-family: 'Space Grotesk', monospace;
   font-size: 10px;
-  letter-spacing: 0.08em;
+  letter-spacing: 0.1em;
   text-transform: uppercase;
-  color: var(--ink-50);
+  color: var(--clay);
   margin-bottom: 6px;
 }
 
 .le-meta-value {
-  font-size: 14px;
-  font-weight: 600;
+  font-family: 'Fraunces', serif;
+  font-size: 16px;
+  font-weight: 500;
   color: var(--ink);
 }
 
-@media (max-width: 768px) {
-  .le-projects-hero { flex-direction: column; align-items: flex-start; gap: 24px; }
-  .le-projects-hero-meta { width: 100%; border-top: 1px dashed var(--line); padding-top: 20px; }
+/* ============================================================
+   FILTERS BAR
+   ============================================================ */
+.le-projects-filters-bar {
+  max-width: 1280px;
+  margin: 36px auto 0;
+  padding: 0 6vw;
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  flex-wrap: wrap;
 }
 
-/* ============================================================
-   FILTERS
-   ============================================================ */
-.le-projects-filters {
-  max-width: 1280px;
-  margin: 32px auto 0;
-  padding: 0 6vw;
+.le-filters-label {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-family: 'Space Grotesk', monospace;
+  font-size: 11px;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--ink-50);
+  font-weight: 600;
+}
+
+.le-filters-list {
   display: flex;
   flex-wrap: wrap;
   gap: 10px;
@@ -88,7 +113,7 @@
 
 .le-filter-chip {
   font-family: 'Space Grotesk', monospace;
-  font-size: 12px;
+  font-size: 11.5px;
   font-weight: 600;
   text-transform: uppercase;
   letter-spacing: 0.04em;
@@ -98,11 +123,23 @@
   padding: 8px 18px;
   border-radius: 999px;
   cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
   transition: all 0.2s var(--ease);
 }
 
+.le-filter-count {
+  font-size: 10px;
+  padding: 2px 7px;
+  border-radius: 999px;
+  background: rgba(0, 0, 0, 0.05);
+  color: var(--ink-50);
+}
+
 .le-filter-chip:hover {
-  background: rgba(228, 179, 104, 0.08);
+  background: rgba(192, 138, 62, 0.08);
+  border-color: var(--brass-light);
   color: var(--ink);
 }
 
@@ -112,17 +149,176 @@
   border-color: var(--ink);
 }
 
-.le-filter-chip-active:hover {
-  background: var(--ink-soft);
+.le-filter-chip-active .le-filter-count {
+  background: rgba(255, 255, 255, 0.2);
   color: var(--paper);
 }
 
 /* ============================================================
-   PORTFOLIO GRID LAYOUT
+   MULTI-PROJECT SWITCHER TOOLBAR
+   ============================================================ */
+.le-switcher-section {
+  max-width: 1280px;
+  margin: 36px auto 0;
+  padding: 0 6vw;
+}
+
+.le-switcher-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 16px;
+  flex-wrap: wrap;
+  gap: 12px;
+}
+
+.le-switcher-title {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-family: 'Space Grotesk', monospace;
+  font-size: 12px;
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--ink);
+}
+
+.le-brass-icon {
+  color: var(--brass);
+}
+
+.le-switcher-hint {
+  font-size: 12.5px;
+  color: var(--ink-50);
+}
+
+.le-switcher-cards-row {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  gap: 16px;
+}
+
+.le-switcher-card {
+  position: relative;
+  background: var(--paper-dim);
+  border: 1px solid var(--line);
+  border-radius: var(--radius-md);
+  padding: 14px;
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  cursor: pointer;
+  text-align: left;
+  transition: all 0.25s var(--ease);
+  overflow: hidden;
+}
+
+.le-switcher-card:hover {
+  background: var(--paper);
+  border-color: var(--brass-light);
+  transform: translateY(-2px);
+  box-shadow: 0 10px 24px rgba(27, 20, 13, 0.06);
+}
+
+.le-switcher-card-active {
+  background: var(--paper);
+  border-color: var(--brass);
+  box-shadow: 0 12px 30px rgba(192, 138, 62, 0.12);
+}
+
+.le-switcher-img-wrap {
+  position: relative;
+  width: 64px;
+  height: 64px;
+  border-radius: var(--radius-sm);
+  overflow: hidden;
+  flex-shrink: 0;
+  background: #eee;
+}
+
+.le-switcher-img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.le-switcher-img-fallback {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(192, 138, 62, 0.1);
+  color: var(--brass);
+}
+
+.le-switcher-status {
+  position: absolute;
+  top: 4px;
+  left: 4px;
+  font-family: 'Space Grotesk', monospace;
+  font-size: 8px;
+  font-weight: 700;
+  text-transform: uppercase;
+  padding: 2px 6px;
+  border-radius: 4px;
+  color: #fff;
+}
+
+.status-ongoing { background: #d97706; }
+.status-completed { background: #16a34a; }
+
+.le-switcher-details {
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+  min-width: 0;
+}
+
+.le-switcher-type {
+  font-family: 'Space Grotesk', monospace;
+  font-size: 9.5px;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--clay);
+  font-weight: 600;
+}
+
+.le-switcher-name {
+  font-family: 'Fraunces', serif;
+  font-size: 15px;
+  color: var(--ink);
+  margin: 0;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.le-switcher-loc {
+  font-size: 12px;
+  color: var(--ink-50);
+  margin: 0;
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.le-switcher-active-indicator {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  height: 3px;
+  background: var(--brass);
+}
+
+/* ============================================================
+   MAIN FEATURED INSPECTOR LAYOUT
    ============================================================ */
 .le-projects-layout {
   max-width: 1280px;
-  margin: 40px auto 0;
+  margin: 32px auto 0;
   padding: 0 6vw;
   display: grid;
   grid-template-columns: 1.15fr 0.85fr;
@@ -142,9 +338,9 @@
   border-radius: var(--radius-lg);
   overflow: hidden;
   border: 1px solid var(--line);
-  box-shadow: 0 20px 40px rgba(27,20,13,0.05);
+  box-shadow: 0 20px 40px rgba(27,20,13,0.06);
   background: var(--paper-dim);
-  height: 480px;
+  height: 520px;
 }
 
 .le-projects-main-img {
@@ -159,18 +355,32 @@
   bottom: 0;
   left: 0;
   right: 0;
-  background: linear-gradient(to top, rgba(27,20,13,0.85) 0%, transparent 100%);
-  padding: 30px 24px 20px;
+  background: linear-gradient(to top, rgba(15,10,6,0.9) 0%, transparent 100%);
+  padding: 40px 28px 24px;
   color: var(--paper);
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.le-caption-badge {
   font-family: 'Space Grotesk', monospace;
-  font-size: 13px;
-  letter-spacing: 0.02em;
+  font-size: 10px;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--brass-light);
+}
+
+.le-caption-title {
+  font-family: 'Fraunces', serif;
+  font-size: 18px;
+  font-weight: 500;
 }
 
 /* Thumbnails */
 .le-projects-thumbs {
   display: grid;
-  grid-template-columns: repeat(4, 1fr);
+  grid-template-columns: repeat(auto-fit, minmax(110px, 1fr));
   gap: 12px;
 }
 
@@ -194,18 +404,19 @@
 
 .le-project-thumb-active {
   border-color: var(--brass);
-  background: rgba(228, 179, 104, 0.05);
+  background: rgba(192, 138, 62, 0.06);
+  box-shadow: 0 0 0 1px var(--brass);
 }
 
 .le-project-thumb-img {
   width: 100%;
-  height: 70px;
+  height: 72px;
   object-fit: cover;
   border-radius: var(--radius-sm);
 }
 
 .le-project-thumb-btn span {
-  font-size: 10.5px;
+  font-size: 11px;
   font-weight: 600;
   color: var(--ink-70);
   white-space: nowrap;
@@ -215,41 +426,59 @@
   display: block;
 }
 
-@media (max-width: 900px) {
-  .le-projects-layout { grid-template-columns: 1fr; gap: 32px; }
-  .le-projects-main-image { height: 340px; }
-  .le-project-thumb-img { height: 50px; }
-}
-
 /* ============================================================
-   PROJECT DETAILS CARD
+   DETAILS & ARCHITECTURAL SPECIFICATION SHEET (FIXED OVERLAP BUG)
    ============================================================ */
 .le-projects-side-card {
   background: var(--paper-dim);
   border: 1px solid var(--line);
   border-radius: var(--radius-lg);
-  padding: 40px;
-  box-shadow: 0 15px 35px rgba(27,20,13,0.02);
+  padding: 36px;
+  box-shadow: 0 15px 35px rgba(27,20,13,0.03);
+}
+
+.le-side-card-top {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 18px;
 }
 
 .le-project-pill {
-  display: inline-block;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
   font-family: 'Space Grotesk', monospace;
   font-size: 10px;
   font-weight: 600;
   text-transform: uppercase;
-  letter-spacing: 0.05em;
-  background: rgba(192, 138, 62, 0.08);
-  color: var(--brass);
-  border: 1px solid rgba(192, 138, 62, 0.18);
+  letter-spacing: 0.08em;
   padding: 5px 12px;
   border-radius: 999px;
-  margin-bottom: 20px;
+}
+
+.pill-ongoing {
+  background: rgba(217, 119, 6, 0.1);
+  color: #d97706;
+  border: 1px solid rgba(217, 119, 6, 0.25);
+}
+
+.pill-completed {
+  background: rgba(22, 163, 74, 0.1);
+  color: #16a34a;
+  border: 1px solid rgba(22, 163, 74, 0.25);
+}
+
+.le-project-id-tag {
+  font-family: 'Space Grotesk', monospace;
+  font-size: 10.5px;
+  letter-spacing: 0.08em;
+  color: var(--ink-50);
 }
 
 .le-projects-side-card h2 {
   font-family: 'Fraunces', serif;
-  font-size: clamp(24px, 3vw, 32px);
+  font-size: clamp(26px, 3vw, 34px);
   line-height: 1.2;
   margin: 0 0 8px;
   color: var(--ink);
@@ -257,40 +486,98 @@
 
 .le-project-side-location {
   font-size: 14px;
-  color: var(--ink-50);
-  margin-bottom: 24px;
+  color: var(--clay);
+  margin-bottom: 20px;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-weight: 500;
 }
 
 .le-project-side-text {
   font-size: 14.5px;
   line-height: 1.65;
   color: var(--ink-70);
-  margin: 0 0 32px;
+  margin: 0 0 28px;
 }
 
-.le-project-side-meta {
-  border-top: 1px dashed var(--line);
-  padding-top: 24px;
+/* SPECIFICATION SHEET - STACKED CARDS (ZERO OVERLAPPING TEXT) */
+.le-project-specs-sheet {
+  border: 1px solid rgba(192, 138, 62, 0.25);
+  border-radius: var(--radius-md);
+  background: var(--paper);
+  padding: 20px;
   display: flex;
   flex-direction: column;
   gap: 16px;
   margin-bottom: 32px;
 }
 
-.le-project-side-meta > div {
+.le-specs-header {
   display: flex;
-  justify-content: space-between;
   align-items: center;
-  font-size: 13.5px;
+  gap: 8px;
+  font-family: 'Space Grotesk', monospace;
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--clay);
+  padding-bottom: 12px;
+  border-bottom: 1px dashed var(--line);
 }
 
-.le-side-label {
+.le-spec-card {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  padding: 14px 16px;
+  background: var(--paper-dim);
+  border: 1px solid var(--line);
+  border-radius: var(--radius-sm);
+}
+
+.le-spec-top {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.le-spec-icon {
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  background: rgba(192, 138, 62, 0.1);
+  color: var(--brass);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.le-spec-label {
+  font-family: 'Space Grotesk', monospace;
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
   color: var(--ink-50);
 }
 
-.le-side-value {
+.le-spec-value-main {
+  font-family: 'Fraunces', serif;
+  font-size: 16px;
   font-weight: 600;
   color: var(--ink);
+  padding-left: 36px;
+}
+
+.le-spec-value-text {
+  font-size: 13.5px;
+  line-height: 1.65;
+  color: var(--ink-70);
+  padding-left: 36px;
+  margin: 0;
 }
 
 .le-project-side-footer {
@@ -299,7 +586,7 @@
 }
 
 .le-project-side-footer p {
-  font-size: 12.5px;
+  font-size: 13px;
   line-height: 1.6;
   color: var(--ink-50);
   margin: 0 0 20px;
@@ -311,7 +598,7 @@
   font-weight: 600;
   text-transform: uppercase;
   letter-spacing: 0.08em;
-  padding: 13px 26px;
+  padding: 14px 28px;
   border-radius: 999px;
   background: var(--ink);
   color: var(--paper);
@@ -319,14 +606,278 @@
   display: flex;
   align-items: center;
   justify-content: center;
+  gap: 8px;
   width: 100%;
   cursor: pointer;
   text-decoration: none;
-  transition: all 0.2s ease;
-  box-shadow: 0 10px 24px rgba(27,20,13,0.06);
+  transition: all 0.25s ease;
+  box-shadow: 0 10px 24px rgba(27,20,13,0.08);
 }
 
 .le-projects-cta-btn:hover {
   background: var(--clay);
   transform: translateY(-2px);
+  box-shadow: 0 14px 30px rgba(122, 59, 24, 0.25);
+}
+
+/* ============================================================
+   DIRECTORY CATALOG GRID (ALL PROJECTS)
+   ============================================================ */
+.le-projects-catalog-section {
+  max-width: 1280px;
+  margin: 80px auto 0;
+  padding: 0 6vw;
+  border-top: 1px solid var(--line);
+  padding-top: 60px;
+}
+
+.le-catalog-head {
+  margin-bottom: 40px;
+}
+
+.le-catalog-head h2 {
+  font-family: 'Fraunces', serif;
+  font-size: clamp(28px, 3.5vw, 42px);
+  margin: 8px 0 12px;
+  color: var(--ink);
+}
+
+.le-catalog-head p {
+  font-size: 15px;
+  color: var(--ink-70);
+  margin: 0;
+}
+
+.le-catalog-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(340px, 1fr));
+  gap: 32px;
+}
+
+.le-catalog-card {
+  background: var(--paper-dim);
+  border: 1px solid var(--line);
+  border-radius: var(--radius-lg);
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  transition: all 0.3s var(--ease);
+}
+
+.le-catalog-card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 20px 40px rgba(27,20,13,0.08);
+  border-color: var(--brass-light);
+}
+
+.is-selected-card {
+  border-color: var(--brass);
+  box-shadow: 0 0 0 1px var(--brass);
+}
+
+.le-catalog-thumb-wrap {
+  position: relative;
+  height: 220px;
+  background: #eee;
+  overflow: hidden;
+}
+
+.le-catalog-img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: transform 0.5s ease;
+}
+
+.le-catalog-card:hover .le-catalog-img {
+  transform: scale(1.04);
+}
+
+.le-catalog-img-fallback {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(192, 138, 62, 0.1);
+  color: var(--brass);
+}
+
+.le-catalog-status {
+  position: absolute;
+  top: 14px;
+  right: 14px;
+  font-family: 'Space Grotesk', monospace;
+  font-size: 9px;
+  font-weight: 700;
+  text-transform: uppercase;
+  padding: 4px 10px;
+  border-radius: 999px;
+  color: #fff;
+}
+
+.le-catalog-body {
+  padding: 24px;
+  display: flex;
+  flex-direction: column;
+  flex-grow: 1;
+}
+
+.le-catalog-type {
+  font-family: 'Space Grotesk', monospace;
+  font-size: 10px;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--clay);
+  font-weight: 600;
+  margin-bottom: 6px;
+}
+
+.le-catalog-body h3 {
+  font-family: 'Fraunces', serif;
+  font-size: 20px;
+  margin: 0 0 8px;
+  color: var(--ink);
+}
+
+.le-catalog-loc {
+  font-size: 13px;
+  color: var(--ink-50);
+  margin-bottom: 14px;
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.le-catalog-desc {
+  font-size: 13.5px;
+  line-height: 1.6;
+  color: var(--ink-70);
+  margin: 0 0 24px;
+  display: -webkit-box;
+  -webkit-line-clamp: 3;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+.le-catalog-footer {
+  margin-top: auto;
+  padding-top: 16px;
+  border-top: 1px dashed var(--line);
+}
+
+.le-catalog-btn {
+  width: 100%;
+  font-family: 'Space Grotesk', monospace;
+  font-size: 11px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  padding: 10px 18px;
+  border-radius: 999px;
+  background: var(--paper);
+  border: 1px solid var(--line);
+  color: var(--ink);
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  transition: all 0.2s ease;
+}
+
+.le-catalog-btn:hover {
+  background: var(--ink);
+  color: var(--paper);
+  border-color: var(--ink);
+}
+
+/* ============================================================
+   LOADING & ERROR STATES
+   ============================================================ */
+.le-projects-loading {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 80px 20px;
+  gap: 16px;
+  color: var(--ink-70);
+}
+
+.le-spinner {
+  width: 32px;
+  height: 32px;
+  border: 3px solid rgba(192, 138, 62, 0.2);
+  border-top-color: var(--brass);
+  border-radius: 50%;
+  animation: le-spin 0.8s linear infinite;
+}
+
+@keyframes le-spin {
+  to { transform: rotate(360deg); }
+}
+
+.le-projects-error {
+  max-width: 600px;
+  margin: 40px auto;
+  padding: 20px 24px;
+  background: rgba(180, 35, 24, 0.08);
+  border: 1px solid rgba(180, 35, 24, 0.2);
+  border-radius: var(--radius-md);
+  color: #b42318;
+  text-align: center;
+}
+
+.le-projects-empty {
+  max-width: 600px;
+  margin: 60px auto;
+  padding: 40px;
+  text-align: center;
+  color: var(--ink-70);
+  background: var(--paper-dim);
+  border: 1px dashed var(--line);
+  border-radius: var(--radius-lg);
+}
+
+/* ============================================================
+   RESPONSIVENESS
+   ============================================================ */
+@media (max-width: 900px) {
+  .le-projects-layout {
+    grid-template-columns: 1fr;
+    gap: 32px;
+  }
+
+  .le-projects-main-image {
+    height: 360px;
+  }
+
+  .le-switcher-cards-row {
+    grid-template-columns: 1fr;
+  }
+
+  .le-catalog-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (max-width: 600px) {
+  .le-projects-hero {
+    padding: 60px 6vw 32px;
+  }
+
+  .le-projects-hero-meta {
+    flex-direction: column;
+    gap: 16px;
+  }
+
+  .le-projects-side-card {
+    padding: 24px;
+  }
+
+  .le-spec-value-main,
+  .le-spec-value-text {
+    padding-left: 0;
+  }
 }
