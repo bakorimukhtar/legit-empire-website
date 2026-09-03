@@ -153,7 +153,7 @@ const Teams = () => {
 
                       <div className="roster-socials-group">
                         <a
-                          href="mailto:info@legitempire.com"
+                          href="mailto:info@legitempirerealestate.com"
                           aria-label={`Email ${member.name}`}
                           title="Email"
                         >

@@ -215,9 +215,9 @@ function App() {
             <Phone size={18} />
             <span>+234 813 216 1510</span>
           </a>
-          <a href="mailto:info@legitempire.com" className="social-item email-link" style={{ display: "flex", gap: "10px", color: "var(--paper-70)", textDecoration: "none", marginBottom: "16px" }}>
+          <a href="mailto:info@legitempirerealestate.com" className="social-item email-link" style={{ display: "flex", gap: "10px", color: "var(--paper-70)", textDecoration: "none", marginBottom: "16px" }}>
             <Mail size={18} />
-            <span>info@legitempire.com</span>
+            <span>info@legitempirerealestate.com</span>
           </a>
           
           <div className="social-icons-row" style={{ display: "flex", gap: "20px", marginBottom: "24px" }}>

@@ -353,7 +353,7 @@ const About = () => {
                 
                 <div className="executive-socials">
                   <a
-                    href="mailto:info@legitempire.com"
+                    href="mailto:info@legitempirerealestate.com"
                     aria-label="Email Al-Ameen Salisu Mamman"
                     title="Send Email"
                   >
@@ -427,7 +427,7 @@ const About = () => {
                 
                 <div className="executive-socials">
                   <a
-                    href="mailto:info@legitempire.com"
+                    href="mailto:info@legitempirerealestate.com"
                     aria-label="Email Ismaeel Isyaku Miloniya"
                     title="Send Email"
                   >
