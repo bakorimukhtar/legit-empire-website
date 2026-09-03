@@ -1,6 +1,6 @@
 {
-  "name": "solo-equations-landing",
-  "version": "0.1.0",
+  "name": "legit-empire-website",
+  "version": "2.0.0",
   "private": true,
   "dependencies": {
     "framer-motion": "^12.23.26",
