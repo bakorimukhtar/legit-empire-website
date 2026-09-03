@@ -168,7 +168,7 @@ function App() {
             <Globe size={14} /> EN
           </button>
           <Link to="/schedule" className="btn btn-primary">
-            Schedule Appointment
+            Book Site Inspection
           </Link>
         </div>
 
@@ -233,7 +233,7 @@ function App() {
           </div>
 
           <Link to="/schedule" className="btn btn-primary" onClick={closeMenu} style={{ justifyContent: "center", width: "100%" }}>
-            Schedule Appointment
+            Book Site Inspection
           </Link>
         </div>
       </div>

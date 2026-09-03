@@ -196,10 +196,10 @@ const Schedule = () => {
           viewport={fadeUp.viewport}
           transition={fadeUp.transition}
         >
-          <span className="schedule-pill">Book a visit</span>
-          <h1>Schedule a private tour with Legit Empire.</h1>
+          <span className="schedule-pill">Book Site Inspection</span>
+          <h1>Book a private site inspection with Legit Empire.</h1>
           <p>
-            Share a few details about your visit and our team will confirm your appointment, send directions, and prepare the right information ahead of time.
+            Share a few details about your preferred estate and date, and our sales advisory team will confirm your site inspection, provide clear location directions, and prepare title documentation ahead of time.
           </p>
           <div className="schedule-meta-row">
             <div>
@@ -383,7 +383,7 @@ const Schedule = () => {
               className="schedule-submit-btn"
               disabled={isSubmitting || projectsLoading || !!projectsError}
             >
-              {isSubmitting ? "Submitting..." : "Request appointment"}
+              {isSubmitting ? "Submitting..." : "Book Site Inspection"}
             </button>
 
             <p className="schedule-disclaimer">
@@ -456,9 +456,9 @@ const Schedule = () => {
             <div className="confirm-icon">
               <CalendarDays size={40} />
             </div>
-            <h2>Appointment request received</h2>
+            <h2>Site inspection request received</h2>
             <p>
-              Thank you for scheduling a visit with Legit Empire. Our team will review your preferred time and get back to you to confirm the exact slot.
+              Thank you for requesting a site inspection with Legit Empire. Our team will review your preferred date and time, then contact you on Phone/WhatsApp to confirm.
             </p>
             <button className="confirm-btn" onClick={closeConfirm}>
               Back to schedule

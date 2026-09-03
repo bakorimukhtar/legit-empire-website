@@ -489,7 +489,7 @@ export default function Chatbot() {
           {
             id: Math.random().toString(),
             sender: "bot",
-            text: `Appointment successfully scheduled! You will receive a confirmation email shortly. Our sales advisory team will also contact you on WhatsApp/Phone at ${phone}.`,
+            text: `Site inspection request successfully booked! You will receive a confirmation email shortly. Our sales advisory team will also contact you on WhatsApp/Phone at ${phone}.`,
             componentType: "COMPLETE_BUTTON",
             timestamp: new Date(),
           }

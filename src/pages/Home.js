@@ -298,7 +298,7 @@ function Home() {
             </p>
             <div className="hero-actions hero-fade-up">
               <Link to="/schedule" className="btn btn-primary">
-                Schedule a visit
+                Book Site Inspection
               </Link>
               <Link to="/projects" className="btn btn-ghost">
                 Explore Projects
@@ -507,7 +507,7 @@ function Home() {
           </div>
           <div className="cta-actions">
             <Link to="/schedule" className="btn btn-primary">
-              Book inspection
+              Book Site Inspection
             </Link>
             <Link to="/contact" className="btn btn-ghost-light">
               Talk to our team
