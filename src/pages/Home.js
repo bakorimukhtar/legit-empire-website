@@ -206,14 +206,44 @@ function Home() {
     };
   }, []);
 
+  const autoPlayRef = useRef(null);
+
+  const startAutoPlay = () => {
+    stopAutoPlay();
+    if (projects.length > 1) {
+      autoPlayRef.current = setInterval(() => {
+        setProjectIndex((prev) => (prev + 1) % projects.length);
+      }, 4500);
+    }
+  };
+
+  const stopAutoPlay = () => {
+    if (autoPlayRef.current) {
+      clearInterval(autoPlayRef.current);
+      autoPlayRef.current = null;
+    }
+  };
+
+  useEffect(() => {
+    startAutoPlay();
+    return () => stopAutoPlay();
+  }, [projects.length]);
+
   const handleNextProject = () => {
     if (projects.length === 0) return;
     setProjectIndex((prev) => (prev + 1) % projects.length);
+    startAutoPlay();
   };
 
   const handlePrevProject = () => {
     if (projects.length === 0) return;
     setProjectIndex((prev) => (prev - 1 + projects.length) % projects.length);
+    startAutoPlay();
+  };
+
+  const handleSelectProject = (idx) => {
+    setProjectIndex(idx);
+    startAutoPlay();
   };
 
   return (
@@ -354,7 +384,13 @@ function Home() {
       </section>
 
       {/* PROJECTS SECTION */}
-      <section className="block" id="projects" style={{ background: "var(--paper-dim)" }}>
+      <section
+        className="block"
+        id="projects"
+        style={{ background: "var(--paper-dim)" }}
+        onMouseEnter={stopAutoPlay}
+        onMouseLeave={startAutoPlay}
+      >
         <div className="wrap">
           <div className="projects-head reveal">
             <div>
@@ -416,7 +452,7 @@ function Home() {
                 <button
                   key={idx}
                   className={`proj-dot ${idx === projectIndex ? "active" : ""}`}
-                  onClick={() => setProjectIndex(idx)}
+                  onClick={() => handleSelectProject(idx)}
                   aria-label={`Go to project ${idx + 1}`}
                 />
               ))}
