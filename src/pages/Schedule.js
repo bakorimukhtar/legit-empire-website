@@ -203,11 +203,15 @@ const Schedule = () => {
           </p>
           <div className="schedule-meta-row">
             <div>
-              <span className="meta-label">Available cities</span>
+              <span className="meta-label">
+                <MapPin size={12} style={{ display: "inline", marginRight: "4px", color: "var(--brass)" }} /> Available Cities
+              </span>
               <span className="meta-value">Abuja • Lagos • Kaduna</span>
             </div>
             <div>
-              <span className="meta-label">Typical response</span>
+              <span className="meta-label">
+                <Clock3 size={12} style={{ display: "inline", marginRight: "4px", color: "var(--brass)" }} /> Typical Response
+              </span>
               <span className="meta-value">Within 24 business hours</span>
             </div>
           </div>
