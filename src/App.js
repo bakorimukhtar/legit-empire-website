@@ -329,7 +329,18 @@ function App() {
           </div>
 
           <div className="footer-bottom">
-            <p>© {new Date().getFullYear()} Legit Empire Real Estate Limited.</p>
+            <p>© {new Date().getFullYear()} Legit Empire Real Estate Limited. All rights reserved.</p>
+            <p className="powered-by-bakoritech">
+              Powered by{" "}
+              <a
+                href="https://www.bakoritech.com.ng/pages/contact"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="bakoritech-link"
+              >
+                BAKORITECH
+              </a>
+            </p>
           </div>
         </div>
       </footer>

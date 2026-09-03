@@ -15,6 +15,7 @@ import {
 } from "lucide-react";
 import { Link } from "react-router-dom";
 import "./Home.css";
+import SEO from "../components/SEO";
 
 // Hook: Rotating phrase index — used with a CSS "roll reveal" on mount,
 // no letter-by-letter typing. Cleaner, calmer, more deliberate.
@@ -248,6 +249,11 @@ function Home() {
 
   return (
     <div className="Home">
+      <SEO
+        title="Legit Empire Real Estate | Building Trusted Property Wealth"
+        description="Legit Empire Real Estate Limited designs and delivers modern luxury homes, premium gated estates, and investment-grade properties across Nigeria. Building trusted property wealth in Lagos, Abuja, and Kaduna."
+        keywords="legit empire, legit empire real estate, property development nigeria, real estate developer abuja, houses for sale lagos, buy land abuja, luxury apartments nigeria, gated estate lagos, nigerian real estate company"
+      />
       {/* HERO SECTION */}
       <section className="hero">
         {/* Architectural self-drawing blueprint skyline graphic */}
